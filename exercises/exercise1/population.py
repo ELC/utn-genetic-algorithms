@@ -2,11 +2,39 @@
 
 class Population():
     """Population Class."""
-    def __init__(self):
-        population_size = Settings.population_size
-        self.individuals = [Individual() for i in range(population_size)]
+    def __init__(self, individuals=None):
+        population_size = Settings.get_population_size()
+        if individuals is None:
+            self.individuals = [Individual() for i in range(population_size)]
+        else:
+            self.individuals = individuals
         self.amount = population_size
         self.childs = None
+        self.genes = self.get_genes()
+        self.maximum = self.__calc_maximum()
+        self.minimum = self.__calc_minimum()
+        self.average = self.__calc_average()
+        self.least = self.__calc_least()
+        self.range = self.__calc_range()
+
+    def __calc_maximum(self):
+        return max(self.genes)
+
+    def __calc_minimum(self):
+        return min(self.genes)
+
+    def __calc_average(self):
+        total = sum(self.genes)
+        return total / self.amount
+
+    def __calc_least(self):
+        distance = 0
+        for gene in self.genes:
+            distance += int((self.average - gene) ** 2)
+        return distance
+
+    def __calc_range(self):
+        return self.maximum - self.minimum
 
     def evolve(self):
         """Prepare the next generation."""
@@ -28,7 +56,8 @@ class Population():
 
     def survive(self):
         """Replace the old generation with the new one."""
-        self.individuals = self.childs
+        next_generation = Population(individuals=self.childs)
+        return next_generation
 
     def __fitness(self):
         target_total = self.get_total_target()
