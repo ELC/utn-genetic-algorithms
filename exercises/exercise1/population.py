@@ -33,7 +33,7 @@ class Population():
     def __fitness(self):
         target_total = self.get_total_target()
         for individual in self.individuals:
-            individual.fit(Algorithm.target, target_total)
+            individual.fit(Settings.target, target_total)
 
     def __acumulated_fitness(self):
         acum = []
@@ -149,7 +149,7 @@ class Population():
         target = []
         individuals_genes = self.get_genes()
         for individual_gene in individuals_genes:
-            individual_target = Algorithm.target(individual_gene)
+            individual_target = Settings.target(individual_gene)
             target.append(individual_target)
         return target
 

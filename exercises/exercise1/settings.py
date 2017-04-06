@@ -2,11 +2,16 @@
 
 class Settings():
     """Settings for the algorithm."""
-    population_size = 20
+    population_size = 4
     cross_over_prob = 0.1
     mutation_prob = 0.001
     generations = 1000
     individual_bits = 5
+
+    @staticmethod
+    def target(number):
+        """Define a Target function."""
+        return 1 / (number+0.0000001)
 
     @classmethod
     def header(cls):

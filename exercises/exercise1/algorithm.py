@@ -81,11 +81,6 @@ class Algorithm():
             [self.maximums, self.minimums, self.averages],
             ["Maximos", "Minimos", "Promedios"])
 
-    @staticmethod
-    def target(number):
-        """Define a Target function."""
-        return number ** 2
-
 if __name__ == '__main__':
     CONST = Algorithm()
     CONST.evolve()
