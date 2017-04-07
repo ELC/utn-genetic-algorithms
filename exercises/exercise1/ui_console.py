@@ -19,6 +19,7 @@ class Console():
 
     def full_report(self):
         self.generations_report()
+        self.solution_report()
 
     def generations_report(self):
         data = Settings.load_results()
@@ -30,6 +31,13 @@ class Console():
         data_frame_int = data_frame.astype(int)
 
         print(data_frame_int)
+    
+    def solution_report(self):
+        data = Settings.load_results()
+        last_population = data[-1]
+        last_population.maximum
+
+        print("La solución final es: {}".format(last_population.maximum))
 
     def __get_data_frame(self, data):
         datas = self.__get_array_data(data)
