@@ -19,6 +19,7 @@ class Population():
         self.generation = "Final"
 
     def set_generation(self, value):
+        """Set the generation it corresponds"""
         self.generation = value
 
     def __generate_individuals(self, size):
