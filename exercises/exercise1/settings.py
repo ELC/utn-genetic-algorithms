@@ -43,37 +43,37 @@ class Settings():
     def set_generations(cls, value):
         cls.load_settings()
         cls.generations = value
-        cls.set_settings()
+        cls.__set_settings()
 
     @classmethod
     def set_cross_over_prob(cls, value):
         cls.load_settings()
         cls.cross_over_prob = value
-        cls.set_settings()
+        cls.__set_settings()
 
     @classmethod
     def set_mutation_prob(cls, value):
         cls.load_settings()
         cls.mutation_prob = value
-        cls.set_settings()
+        cls.__set_settings()
 
     @classmethod
     def set_population_size(cls, value):
         cls.load_settings()
         cls.population_size = value
-        cls.set_settings()
+        cls.__set_settings()
 
     @classmethod
     def set_individual_bits(cls, value):
         cls.load_settings()
         cls.individual_bits = value
-        cls.set_settings()
+        cls.__set_settings()
 
     @classmethod
     def set_report(cls, value):
         cls.load_settings()
         cls.report = value
-        cls.set_settings()
+        cls.__set_settings()
 
     @classmethod
     def load_settings(cls):
@@ -93,7 +93,7 @@ class Settings():
         return settings
 
     @classmethod
-    def set_settings(cls):
+    def __set_settings(cls):
         """Write Configuration File."""
         settings = {
             "generations":cls.generations,
