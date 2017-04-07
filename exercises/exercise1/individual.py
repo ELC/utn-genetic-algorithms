@@ -27,18 +27,29 @@ class Individual():
 
     def mutate(self, inverse=True, func=None):
         """Mutate the genes string"""
-        gene = self.__pick_random_gene()
+        index = self.__pick_random_gene()
         if inverse:
-            if gene == "1":
-                gene = "0"
-            else:
-                gene = "1"
+            mutated_genes = self.inverse_gene(index)
         else:
-            gene = func(gene)
+            mutated_genes = func()
+        self.set_genes_string(mutated_genes)
+
+    def inverse_gene(self, index):
+        genes = list(self.genes)
+        gene = genes[index]
+        if gene == "1":
+                genes[index] = "0"
+        else:
+            genes[index] = "1"
+        genes = "".join(genes)
+        return genes
+    
+    def set_genes_string(self, genes_string):
+        self.genes = genes_string
 
     def __pick_random_gene(self):
         index = randint(0, self.amount_genes -1)
-        return self.genes[index]
+        return index
 
     def fit(self, target, total):
         """Calc the fitness value of this individual."""
@@ -66,9 +77,7 @@ class Individual():
         """Return the amout of genes of this individual."""
         return self.amount_genes
 
-if __name__ == "__main__":
-    pass
-else:
+if __name__ != "__main__":
     from numpy.random import randint
     from settings import Settings
     from util import Util

@@ -4,18 +4,25 @@ class Population():
     """Population Class."""
     def __init__(self, individuals=None):
         population_size = Settings.get_population_size()
-        if individuals is None:
-            self.individuals = [Individual() for i in range(population_size)]
-        else:
-            self.individuals = individuals
         self.amount = population_size
-        self.childs = None
+        if individuals is None:
+            individuals = self.__generate_individuals(self.amount)
+        self.individuals = individuals
+        self.childs = []
+        self.fathers = []
         self.genes = self.get_genes()
         self.maximum = self.__calc_maximum()
         self.minimum = self.__calc_minimum()
         self.average = self.__calc_average()
         self.least = self.__calc_least()
         self.range = self.__calc_range()
+        self.generation = "Final"
+
+    def set_generation(self, value):
+        self.generation = value
+
+    def __generate_individuals(self, size):
+        return [Individual() for i in range(size)]
 
     def __calc_maximum(self):
         return max(self.genes)
@@ -30,7 +37,8 @@ class Population():
     def __calc_least(self):
         distance = 0
         for gene in self.genes:
-            distance += int((self.average - gene) ** 2)
+            distance_unrounded = (self.average - gene) ** 2
+            distance += int(distance_unrounded)
         return distance
 
     def __calc_range(self):
@@ -38,17 +46,16 @@ class Population():
 
     def evolve(self):
         """Prepare the next generation."""
-        self.childs = []
-
         self.__fitness()
 
-        fathers = self.__choose_fathers()
-        couples = self.__make_couples(fathers)
-        self.__cross_over(couples)
+        self.__choose_fathers()
+
+        self.__cross_over()
+
         self.__mutate()
 
     def __mutate(self):
-        mutation_prob = Settings.mutation_prob
+        mutation_prob = Settings.get_mutation_prob()
         for individual in self.childs:
             prob = Util.get_random_prob(precision=5)
             if prob < mutation_prob:
@@ -77,14 +84,12 @@ class Population():
         return acum
 
     def __choose_fathers(self):
-        fathers = []
         fitness_acumulated_values = self.__acumulated_fitness()
         for _ in range(self.amount):
             prob = Util.get_random_prob()
             index = Util.find_bigger(fitness_acumulated_values, prob)
             individual = self.individuals[index]
-            fathers.append(individual)
-        return fathers
+            self.fathers.append(individual)
 
     def __make_couples(self, fathers):
         amount = self.amount // 2
@@ -94,7 +99,8 @@ class Population():
             couples.append(couple)
         return couples
 
-    def __cross_over(self, couples):
+    def __cross_over(self):
+        couples = self.__make_couples(self.fathers)
         cross_over_prob = Settings.cross_over_prob
         for (father1, father2) in couples:
             prob = Util.get_random_prob()
@@ -106,7 +112,6 @@ class Population():
             self.childs.append(child1)
             self.childs.append(child2)
 
-
     def __cross_over_n_points(self, father1, father2, points=1):
         length = father1.get_size()
         split_points = self.__get_split_points(points, length)
@@ -115,14 +120,12 @@ class Population():
         child1, child2 = self.__mix(father1_gene_parts, father2_gene_parts)
         return child1, child2
 
-
     def __get_split_points(self, points, length):
         split_points = []
         for _ in range(points):
             split_point = randint(0, length)
             split_points.append(split_point)
         return split_points
-
 
     def __split_in_parts(self, father, split_points):
         start = 0
@@ -141,7 +144,6 @@ class Population():
 
         return parts
 
-
     def __mix(self, father1, father2):
         child1_raw = []
         child2_raw = []
@@ -158,7 +160,6 @@ class Population():
         child1 = Individual(genes=child1_gene_string)
         child2 = Individual(genes=child2_gene_string)
         return child1, child2
-
 
     def get_fitness(self):
         """Return the fitness value of each individual."""

@@ -1,6 +1,5 @@
 """Settings Class"""
 
-
 class Settings():
     """Settings for the algorithm."""
     generations = None
@@ -111,29 +110,15 @@ class Settings():
         """Define a Target function."""
         return number ** 2
 
-    @classmethod
-    def header(cls):
-        """Show basic Configurations."""
-        settings = cls.load_all_settings()
-        population_size = settings["population_size"]
-        cross_over_prob = settings["cross_over_prob"]
-        mutation_prob = settings["mutation_prob"]
-        generations = settings["generations"]
-        report = settings["report"]
-        print("##########################################")
-        print("Población inicial: {}".format(population_size))
-        print("Probabilidad de CrossOver: {}".format(cross_over_prob))
-        print("Probabilidad de mutacion: {}".format(mutation_prob))
-        print("Numero de generaciones maximas: {}".format(generations))
-        print("Mostrar reporte: {}".format(report))
-        print("##########################################")
-        print()
+    @staticmethod
+    def store_results(results):
+        Manager.store_results(results)
 
-if __name__ == "__main__":
-    from algorithm import Algorithm
-    from configmanager import Manager
-    CONST = Algorithm()
-    CONST.evolve()
-else:
+    @staticmethod
+    def load_results():
+        results = Manager.load_results()
+        return results
+
+if __name__ != "__main__":
     from algorithm import Algorithm
     from configmanager import Manager
