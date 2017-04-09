@@ -5,6 +5,7 @@ class Menu_Builder():
 
     @classmethod
     def build(cls):
+        """Create Menu"""
         report_sub_menu = cls.__generate_report_menu()
         submenus = [
             report_sub_menu

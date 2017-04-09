@@ -112,10 +112,12 @@ class Settings():
 
     @staticmethod
     def store_results(results):
+        """Send the results to the file manager"""
         Manager.store_results(results)
 
     @staticmethod
     def load_results():
+        """Load the results from the file manager"""
         results = Manager.load_results()
         return results
 

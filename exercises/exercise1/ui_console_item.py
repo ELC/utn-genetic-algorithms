@@ -1,7 +1,7 @@
 """Item Class"""
 
-class Item_base:
-    """Define an Item template for the Console Menu"""
+class Item():
+    """Define an Item for the Console Menu"""
     def __init__(self, name=None, function=None, parent=None, id_=None):
         self.id_ = id_
         self.name = name
@@ -23,7 +23,3 @@ class Item_base:
         self.function()
         print()
         input("Presione Enter para continuar\n\n")
-
-class Item(Item_base):
-    """Define an Item for the Console Menu"""
-    pass
