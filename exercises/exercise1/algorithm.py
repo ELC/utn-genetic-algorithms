@@ -27,4 +27,3 @@ class Algorithm():
 if __name__ != '__main__':
     from population import Population
     from settings import Settings
-    from util import Util
