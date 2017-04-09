@@ -2,28 +2,30 @@
 
 class Console():
     """Console Presentation View"""
-    status = "ACTIVE"
 
     @classmethod
-    def menu(cls):
-        menu_factory = Menu_Builder()
-        menu = menu_factory.build()
+    def main(cls):
+        menu = cls.__create_menu()
         menu.execute()
 
+    @staticmethod
+    def __create_menu():
+        return Menu_Builder.build()
+
     @classmethod
-    def close(cls):
-        cls.status = "CLOSED"
-
-    def execute(self):
+    def execute(cls):
         Algorithm()
+        cls.full_report()
 
-    def full_report(self):
-        self.generations_report()
-        self.solution_report()
+    @classmethod
+    def full_report(cls):
+        cls.generations_report()
+        cls.solution_report()
 
-    def generations_report(self):
+    @classmethod
+    def generations_report(cls):
         data = Settings.load_results()
-        data_pd = self.__get_data_frame(data)
+        data_pd = cls.__get_data_frame(data)
 
         gens = [i for i, _ in enumerate(data)]
 
@@ -31,20 +33,22 @@ class Console():
         data_frame_int = data_frame.astype(int)
 
         print(data_frame_int)
-    
-    def solution_report(self):
+
+    @staticmethod
+    def solution_report():
         data = Settings.load_results()
         last_population = data[-1]
-        last_population.maximum
+        solution = last_population.maximum
+        print("La solución final es: {}".format(solution))
 
-        print("La solución final es: {}".format(last_population.maximum))
-
-    def __get_data_frame(self, data):
-        datas = self.__get_array_data(data)
+    @classmethod
+    def __get_data_frame(cls, data):
+        datas = cls.__get_array_data(data)
         labels = ("Máximo", "Mínimo", "Promedio", "Mínimos cuadrados", "Rango")
         return [(i, j) for i, j in zip(labels, datas)]
 
-    def __get_array_data(self, data):
+    @staticmethod
+    def __get_array_data(data):
         maximums = [i.maximum for i in data]
         minimums = [i.minimum for i in data]
         averages = [i.average for i in data]
@@ -52,8 +56,8 @@ class Console():
         ranges = [i.range for i in data]
         return (maximums, minimums, averages, leasts, ranges)
 
-
-    def __header_legacy(self):
+    @staticmethod
+    def __header_legacy():
         """Show basic Configurations."""
         settings = Settings.load_all_settings()
         population_size = settings["population_size"]
@@ -70,7 +74,8 @@ class Console():
         print("##########################################")
         print()
 
-    def show_settings(self):
+    @staticmethod
+    def show_settings():
         """Show basic Configurations."""
         settings = Settings.load_all_settings()
         print(pd.Series(settings))
@@ -80,9 +85,8 @@ if __name__ == "__main__":
     from settings import Settings
     from algorithm import Algorithm
     from ui_console_menu_builder import Menu_Builder
-    console = Console()
-    console.menu()
-else:
+    Console.main()
+if __name__ != "__main__":
     import pandas as pd
     from settings import Settings
     from algorithm import Algorithm
