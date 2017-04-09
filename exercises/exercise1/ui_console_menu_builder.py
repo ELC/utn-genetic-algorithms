@@ -16,12 +16,10 @@ class Menu_Builder():
 
     @classmethod
     def __generate_main_menu(cls, submenus):
-        console = Console()
-
         menu = Menu("Principal")
 
-        items = [Item("Ejecutar", console.execute),
-                 Item("Configuración", console.show_settings),
+        items = [Item("Ejecutar", Console.execute),
+                 Item("Configuración", Console.show_settings),
                 ]
 
         for submenu in submenus:
@@ -36,10 +34,9 @@ class Menu_Builder():
 
     @classmethod
     def __generate_report_menu(cls):
-        console = Console()
         report_sub_menu = Menu("Reporte")
-        report_sub_menu_items = [Item("Reporte Completo", console.full_report),
-                                 Item("Reporte de Generaciones", console.generations_report)
+        report_sub_menu_items = [Item("Reporte Completo", Console.full_report),
+                                 Item("Reporte de Generaciones", Console.generations_report)
                                 ]
         for items in report_sub_menu_items:
             report_sub_menu.add_item(items)

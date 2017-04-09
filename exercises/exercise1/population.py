@@ -192,11 +192,7 @@ class Population():
             genes.append(gene)
         return genes
 
-if __name__ == "__main__":
-    pass
-else:
-    from numpy.random import randint
+if __name__ != "__main__":
     from settings import Settings
     from individual import Individual
     from util import Util
-    from algorithm import Algorithm

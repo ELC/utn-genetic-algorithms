@@ -6,8 +6,11 @@ class Menu:
         self.name = name
         self.items = items or []
         self.status = "ACTIVE"
+        self.close_item = Item(
+            name="Salir/Volver",
+            function=self.__close,
+            id_="0")
         self.parent = parent
-        self.close_item = Item("Salir/Volver", self.__close, id_="0")
         if parent:
             parent.add_item(self)
 

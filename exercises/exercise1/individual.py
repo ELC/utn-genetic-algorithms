@@ -4,7 +4,7 @@ class Individual():
     """Individual class"""
     def __init__(self, genes=None):
         if genes is None:
-            bits = Settings.individual_bits
+            bits = Settings.get_individual_bits()
             genes = self.__generate_gene_string(bits)
         self.genes = genes
         self.amount_genes = len(self.genes)
@@ -38,12 +38,12 @@ class Individual():
         genes = list(self.genes)
         gene = genes[index]
         if gene == "1":
-                genes[index] = "0"
+            genes[index] = "0"
         else:
             genes[index] = "1"
         genes = "".join(genes)
         return genes
-    
+
     def set_genes_string(self, genes_string):
         self.genes = genes_string
 
