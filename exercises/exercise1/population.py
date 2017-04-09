@@ -124,7 +124,7 @@ class Population():
     def __get_split_points(self, points, length):
         split_points = []
         for _ in range(points):
-            split_point = randint(0, length)
+            split_point = Util.get_random_number(0, length)
             split_points.append(split_point)
         return split_points
 

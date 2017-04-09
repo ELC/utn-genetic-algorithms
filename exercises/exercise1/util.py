@@ -11,6 +11,12 @@ class Util():
         return prob
 
     @staticmethod
+    def get_random_number(start, end):
+        """Return a random probability (between 0 and 1) with given precision."""
+        number = randint(start, end)
+        return number
+
+    @staticmethod
     def dec_bin(number):
         """ Convert X from Decimal to Binary."""
         return bin(number)[2:]

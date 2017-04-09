@@ -13,7 +13,7 @@ class Individual():
 
     def __generate_gene_string(self, length):
         maximum = 2 ** length - 1
-        dec_gene = randint(0, maximum)
+        dec_gene = Util.get_random_number(0, maximum)
         bin_gene = Util.dec_bin(dec_gene)
         gene = self.__fill(bin_gene, length)
         return gene
@@ -48,7 +48,7 @@ class Individual():
         self.genes = genes_string
 
     def __pick_random_gene(self):
-        index = randint(0, self.amount_genes -1)
+        index = Util.get_random_number(0, self.amount_genes -1)
         return index
 
     def fit(self, target, total):
@@ -78,6 +78,5 @@ class Individual():
         return self.amount_genes
 
 if __name__ != "__main__":
-    from numpy.random import randint
     from settings import Settings
     from util import Util
