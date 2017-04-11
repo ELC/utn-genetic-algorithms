@@ -22,4 +22,4 @@ class Item():
         print()
         self.function()
         print()
-        input("Presione Enter para continuar\n\n")
+        input("Presione Enter para continuar")

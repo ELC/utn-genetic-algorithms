@@ -19,7 +19,7 @@ class Menu:
         return 1
 
     def execute(self):
-        """Execute item"""
+        """Execute the menu"""
         while self.status == "ACTIVE":
             selected_item = self.__choose_item()
             selected_item.execute()
@@ -71,12 +71,6 @@ class Menu:
             self.items.remove(self.close_item)
         self.items.append(self.close_item)
 
-
-    def remove_item(self, item):
-        """Remove an Item from the menu"""
-        self.items.remove(item)
-        if item.parent == self:
-            item.parent = None
 
     def __draw(self):
         """Print the menu"""

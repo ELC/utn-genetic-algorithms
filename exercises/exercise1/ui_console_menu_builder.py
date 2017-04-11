@@ -17,7 +17,7 @@ class Menu_Builder():
         return main_menu
 
     @staticmethod
-    def __generate_main_menu(submenus):
+    def __generate_main_menu( submenus):
         """Generate the main manu"""
         menu = Menu("Principal")
 

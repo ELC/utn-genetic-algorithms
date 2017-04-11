@@ -3,17 +3,14 @@
 class Console():
     """Console Presentation View"""
 
-
     @staticmethod
     def clear_screen():
         """Clears the terminal screen."""
-        # Clear command as function of OS
         if system_name().lower() == "windows":
             command = "cls"
         else:
             command = "clear"
 
-        # Action
         system_call(command)
 
     @classmethod
@@ -27,16 +24,19 @@ class Console():
 
     @classmethod
     def execute(cls):
+        """Execute the main algorithm and show the report"""
         Algorithm()
         cls.full_report()
 
     @classmethod
     def full_report(cls):
+        """Show all the reports"""
         cls.generations_report()
         cls.solution_report()
 
     @classmethod
     def generations_report(cls):
+        """Show the generations report"""
         data = Settings.load_results()
         data_pd = cls.__get_data_frame(data)
 
@@ -51,16 +51,16 @@ class Console():
 
     @classmethod
     def solution_report(cls):
+        """Show the final solution infered from the generations"""
         data = Settings.load_results()
         last_population = data[-1]
         solution = last_population.maximum
         solution_string = "La solución final es: {}".format(solution)
-        cls.border(solution_string)
+        cls.__border(solution_string)
 
 
     @staticmethod
-    def border(printable_string):
-        """Print the string inside a frame"""
+    def __border(printable_string):
         border = "#" * len(printable_string)
         print(border)
         print(printable_string)
@@ -152,22 +152,24 @@ class Console():
     @classmethod
     def set_report(cls):
         """Set the report status"""
-        value = input("Ingrese nuevo valor: ")
-        Settings.set_report(value)
+        value = input("Ingrese nuevo valor [1=True, 0=False]: ")
+        boolean_value = value == "1"
+        Settings.set_report(boolean_value)
         cls.__updated_settings()
 
 if __name__ == "__main__":
     import pandas as pd
+    from platform import system as system_name
+    from os import system as system_call
     from settings import Settings
     from algorithm import Algorithm
     from ui_console_menu_builder import Menu_Builder
-    from platform import system as system_name # Returns the system/OS name
-    from os import system as system_call       # Execute a shell command
+
     Console.main()
 if __name__ != "__main__":
     import pandas as pd
+    from os import system as system_call
+    from platform import system as system_name
     from settings import Settings
     from algorithm import Algorithm
     from ui_console_menu_builder import Menu_Builder
-    from os import system as system_call
-    from platform import system as system_name
