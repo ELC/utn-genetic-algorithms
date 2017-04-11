@@ -7,19 +7,21 @@ class Menu_Builder():
     def build(cls):
         """Create Menu"""
         report_sub_menu = cls.__generate_report_menu()
+        settings_sub_menu = cls.__generate_settings_menu()
         submenus = [
-            report_sub_menu
+            report_sub_menu,
+            settings_sub_menu
         ]
         main_menu = cls.__generate_main_menu(submenus)
 
         return main_menu
 
-    @classmethod
-    def __generate_main_menu(cls, submenus):
+    @staticmethod
+    def __generate_main_menu(submenus):
+        """Generate the main manu"""
         menu = Menu("Principal")
 
         items = [Item("Ejecutar", Console.execute),
-                 Item("Configuración", Console.show_settings),
                 ]
 
         for submenu in submenus:
@@ -35,12 +37,39 @@ class Menu_Builder():
     @classmethod
     def __generate_report_menu(cls):
         report_sub_menu = Menu("Reporte")
-        report_sub_menu_items = [Item("Reporte Completo", Console.full_report),
-                                 Item("Reporte de Generaciones", Console.generations_report)
-                                ]
-        for items in report_sub_menu_items:
-            report_sub_menu.add_item(items)
+        report_sub_menu_items = [
+            Item("Reporte Completo", Console.full_report),
+            Item("Reporte de Generaciones", Console.generations_report)
+        ]
+        report_sub_menu = cls.__generate_sub_menu(
+            report_sub_menu,
+            report_sub_menu_items
+            )
         return report_sub_menu
+
+    @classmethod
+    def __generate_settings_menu(cls):
+        settings_sub_menu = Menu("Configuracion")
+        settings_sub_menu_items = [
+            Item("Mostrar configuracion actual", Console.show_settings),
+            Item("Cambiar probabilidad de Cross Over", Console.set_cross_over_prob),
+            Item("Cambiar cantidad de bits de los individuos", Console.set_individual_bits),
+            Item("Cambiar cantidad maxima de generaciones", Console.set_generations),
+            Item("Cambiar probabilidad de mutación", Console.set_mutation_prob),
+            Item("Cambiar Tamaño inicial de la población", Console.set_population_size),
+            Item("Cambiar mostrar reporte (en desuso)", Console.set_report)
+        ]
+        settings_sub_menu = cls.__generate_sub_menu(
+            settings_sub_menu,
+            settings_sub_menu_items
+            )
+        return settings_sub_menu
+
+    @staticmethod
+    def __generate_sub_menu(sub_menu, items):
+        for item in items:
+            sub_menu.add_item(item)
+        return sub_menu
 
 
 if __name__ != "__main__":
