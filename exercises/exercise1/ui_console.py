@@ -118,35 +118,40 @@ class Console():
     def set_cross_over_prob(cls):
         """Set the cross over probability"""
         value = input("Ingrese nuevo valor: ")
-        Settings.set_cross_over_prob(value)
+        float_value = float(value)
+        Settings.set_cross_over_prob(float_value)
         cls.__updated_settings()
 
     @classmethod
     def set_individual_bits(cls):
         """Set the individual bits"""
         value = input("Ingrese nuevo valor: ")
-        Settings.set_individual_bits(value)
+        int_value = int(value)
+        Settings.set_individual_bits(int_value)
         cls.__updated_settings()
 
     @classmethod
     def set_generations(cls):
         """Set the maximum amount of generations"""
         value = input("Ingrese nuevo valor: ")
-        Settings.set_generations(value)
+        int_value = int(value)
+        Settings.set_generations(int_value)
         cls.__updated_settings()
 
     @classmethod
     def set_mutation_prob(cls):
         """Set the mutation probability"""
         value = input("Ingrese nuevo valor: ")
-        Settings.set_mutation_prob(value)
+        float_value = float(value)
+        Settings.set_mutation_prob(float_value)
         cls.__updated_settings()
 
     @classmethod
     def set_population_size(cls):
         """Set the initial population size"""
         value = input("Ingrese nuevo valor: ")
-        Settings.set_population_size(value)
+        int_value = int(value)
+        Settings.set_population_size(int_value)
         cls.__updated_settings()
 
     @classmethod
