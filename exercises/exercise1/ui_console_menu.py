@@ -39,9 +39,8 @@ class Menu:
         return None
 
     def __choose_item_id(self):
-        print()
         option = input("Choose an option: ")
-        print()
+        Console.clear_screen()
         return option
 
     def add_item(self, item):
@@ -81,9 +80,7 @@ class Menu:
 
     def __draw(self):
         """Print the menu"""
-        print()
-        print("############################################")
-        print()
+        Console.clear_screen()
         print(self.name)
         print()
         for item in self.items:
@@ -92,3 +89,4 @@ class Menu:
 
 if __name__ != "__main__":
     from ui_console_item import Item
+    from ui_console import Console
