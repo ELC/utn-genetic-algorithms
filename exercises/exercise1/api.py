@@ -11,7 +11,7 @@ class Api():
     @staticmethod
     def export_results():
         """Get the results for the previous run"""
-        results = Settings.load_results
+        results = Settings.load_results()
         return results
 
     @staticmethod
