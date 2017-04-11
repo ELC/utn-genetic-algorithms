@@ -161,6 +161,60 @@ class Console():
         boolean_value = value == "1"
         Settings.set_report(boolean_value)
         cls.__updated_settings()
+    
+    @staticmethod
+    def extract_data():
+        data = Settings.load_results()
+        maximums = [i.maximum for i in data]
+        minimums = [i.minimum for i in data]
+        averages = [i.average for i in data]
+        leasts = [i.least for i in data]
+        ranges = [i.range for i in data]
+
+        datas = [maximums, minimums, averages, leasts, ranges]
+        labels = ["Maximo", "Minimo", "Promedio", "Cuadrados", "Rango"]
+        return datas, labels
+
+    @staticmethod
+    def graphics(datas, labels):
+        """Plot several graph with its labels."""
+        plt.figure(figsize=(17, 9))
+        ax1 = plt.subplot2grid((1, 1), (0, 0))
+        ax1.grid(True)
+
+        plt.xlabel('Generaciones')
+        plt.title('Algoritmo Genético')
+
+
+        for data, label in zip(datas, labels):
+            x_data = [i for i, _ in enumerate(data)]
+            ax1.set_xticks(x_data)
+            y_data = data
+            #print(data)
+            maximum = int(max(data))
+            sticks = (i for i in range(0, maximum+1, 2))
+            unique_sticks = set(sticks)
+            yticsk = sorted(unique_sticks)
+            #ax1.set_yticks(yticsk)
+            ax1.plot(x_data, y_data, label=label)
+        plt.legend()
+        plt.show()
+    
+    @classmethod
+    def graphic_mma(cls):
+        datas, labels = cls.extract_data()
+        cls.graphics(datas[:3],labels[:3])
+
+    @classmethod
+    def graphic_ls(cls):
+        datas, labels = cls.extract_data()
+        cls.graphics(datas[3:4],labels[3:4])
+
+    @classmethod
+    def graphic_r(cls):
+        datas, labels = cls.extract_data()
+        cls.graphics(datas[4:5],labels[4:5])
+
 
 if __name__ == "__main__":
     import pandas as pd
@@ -173,6 +227,7 @@ if __name__ == "__main__":
     Console.main()
 if __name__ != "__main__":
     import pandas as pd
+    import matplotlib.pyplot as plt
     from os import system as system_call
     from platform import system as system_name
     from settings import Settings

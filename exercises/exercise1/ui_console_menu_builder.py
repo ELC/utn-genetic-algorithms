@@ -8,8 +8,10 @@ class Menu_Builder():
         """Create Menu"""
         report_sub_menu = cls.__generate_report_menu()
         settings_sub_menu = cls.__generate_settings_menu()
+        graphic_sub_menu = cls.__generate_graphic_menu()
         submenus = [
             report_sub_menu,
+            graphic_sub_menu,
             settings_sub_menu
         ]
         main_menu = cls.__generate_main_menu(submenus)
@@ -64,6 +66,20 @@ class Menu_Builder():
             settings_sub_menu_items
             )
         return settings_sub_menu
+
+    @classmethod
+    def __generate_graphic_menu(cls):
+        graphic_sub_menu = Menu("Graficos")
+        graphic_sub_menu_items = [
+            Item("Graficar Maximos, minimos y promedios", Console.graphic_mma),
+            Item("Graficar mínimos cuadrados", Console.graphic_ls),
+            Item("Graficar Rango", Console.graphic_r),
+        ]
+        graphic_sub_menu = cls.__generate_sub_menu(
+            graphic_sub_menu,
+            graphic_sub_menu_items
+            )
+        return graphic_sub_menu
 
     @staticmethod
     def __generate_sub_menu(sub_menu, items):
