@@ -89,7 +89,7 @@ class Settings():
     @classmethod
     def load_all_settings(cls):
         """Load Configuration File."""
-        settings = Manager.load_settings()
+        settings = filemanager.load_settings()
         return settings
 
     @classmethod
@@ -103,7 +103,7 @@ class Settings():
             "individual_bits":cls.individual_bits,
             "report":cls.report
         }
-        Manager.set_settings(settings)
+        filemanager.set_settings(settings)
 
     @staticmethod
     def target(number):
@@ -113,14 +113,13 @@ class Settings():
     @staticmethod
     def store_results(results):
         """Send the results to the file manager"""
-        Manager.store_results(results)
+        filemanager.store_results(results)
 
     @staticmethod
     def load_results():
         """Load the results from the file manager"""
-        results = Manager.load_results()
+        results = filemanager.load_results()
         return results
 
 if __name__ != "__main__":
-    from algorithm import Algorithm
-    from configmanager import Manager
+    import filemanager
