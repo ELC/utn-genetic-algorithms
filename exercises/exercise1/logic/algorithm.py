@@ -25,5 +25,5 @@ class Algorithm():
         Settings.store_results(self.populations)
 
 if __name__ != '__main__':
-    from population import Population
-    from settings import Settings
+    from exercise1.entities.population import Population
+    from exercise1.logic.settings import Settings

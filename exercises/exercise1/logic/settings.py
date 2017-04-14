@@ -122,4 +122,4 @@ class Settings():
         return results
 
 if __name__ != "__main__":
-    import filemanager
+    import exercise1.data.filemanager as filemanager

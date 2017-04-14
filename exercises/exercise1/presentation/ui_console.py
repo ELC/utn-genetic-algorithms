@@ -220,9 +220,9 @@ if __name__ == "__main__":
     import pandas as pd
     from platform import system as system_name
     from os import system as system_call
-    from settings import Settings
-    from algorithm import Algorithm
-    from ui_console_menu_builder import Menu_Builder
+    from exercise1.logic.settings import Settings
+    from exercise1.logic.algorithm import Algorithm
+    from exercise1.presentation.ui_console_menu_builder import Menu_Builder
 
     Console.main()
 if __name__ != "__main__":
@@ -230,6 +230,6 @@ if __name__ != "__main__":
     import matplotlib.pyplot as plt
     from os import system as system_call
     from platform import system as system_name
-    from settings import Settings
-    from algorithm import Algorithm
-    from ui_console_menu_builder import Menu_Builder
+    from exercise1.logic.settings import Settings
+    from exercise1.logic.algorithm import Algorithm
+    from exercise1.presentation.ui_console_menu_builder import Menu_Builder

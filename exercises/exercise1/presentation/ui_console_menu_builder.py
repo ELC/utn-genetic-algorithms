@@ -89,6 +89,6 @@ class Menu_Builder():
 
 
 if __name__ != "__main__":
-    from ui_console_menu import Menu
-    from ui_console_item import Item
-    from ui_console import Console
+    from exercise1.presentation.ui_console_menu import Menu
+    from exercise1.presentation.ui_console_item import Item
+    from exercise1.presentation.ui_console import Console 

@@ -78,5 +78,5 @@ class Individual():
         return self.amount_genes
 
 if __name__ != "__main__":
-    from settings import Settings
-    import util
+    from exercise1.logic.settings import Settings
+    import exercise1.util.util as util

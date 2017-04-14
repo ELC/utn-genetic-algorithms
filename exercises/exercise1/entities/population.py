@@ -193,6 +193,6 @@ class Population():
         return genes
 
 if __name__ != "__main__":
-    from settings import Settings
-    from individual import Individual
-    import util
+    from exercise1.logic.settings import Settings
+    from exercise1.entities.individual import Individual
+    import exercise1.util.util as util
