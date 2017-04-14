@@ -58,7 +58,7 @@ class Population():
     def __mutate(self):
         mutation_prob = Settings.get_mutation_prob()
         for individual in self.childs:
-            prob = Util.get_random_prob(precision=5)
+            prob = util.get_random_prob(precision=5)
             if prob < mutation_prob:
                 individual.mutate()
 
@@ -87,8 +87,8 @@ class Population():
     def __choose_fathers(self):
         fitness_acumulated_values = self.__acumulated_fitness()
         for _ in range(self.amount):
-            prob = Util.get_random_prob()
-            index = Util.find_bigger(fitness_acumulated_values, prob)
+            prob = util.get_random_prob()
+            index = util.find_bigger(fitness_acumulated_values, prob)
             individual = self.individuals[index]
             self.fathers.append(individual)
 
@@ -104,7 +104,7 @@ class Population():
         couples = self.__make_couples(self.fathers)
         cross_over_prob = Settings.cross_over_prob
         for (father1, father2) in couples:
-            prob = Util.get_random_prob()
+            prob = util.get_random_prob()
             if prob < cross_over_prob:
                 child1, child2 = self.__cross_over_n_points(father1, father2)
             else:
@@ -124,7 +124,7 @@ class Population():
     def __get_split_points(self, points, length):
         split_points = []
         for _ in range(points):
-            split_point = Util.get_random_number(0, length)
+            split_point = util.get_random_number(0, length)
             split_points.append(split_point)
         return split_points
 
@@ -195,4 +195,4 @@ class Population():
 if __name__ != "__main__":
     from settings import Settings
     from individual import Individual
-    from util import Util
+    import util
