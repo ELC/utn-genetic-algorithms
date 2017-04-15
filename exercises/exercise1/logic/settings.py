@@ -106,11 +106,6 @@ class Settings():
         filemanager.set_settings(settings)
 
     @staticmethod
-    def target(number):
-        """Define a Target function."""
-        return number ** 2
-
-    @staticmethod
     def store_results(results):
         """Send the results to the file manager"""
         filemanager.store_results(results)
