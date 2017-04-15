@@ -33,8 +33,8 @@ def __generate_main_menu(submenus):
 def __generate_report_menu():
     report_sub_menu = Menu("Reporte")
     report_sub_menu_items = [
-        Item("Reporte Completo", report.full_report),
-        Item("Reporte de Generaciones", report.generations_report)
+        Item("Reporte Completo", Console.full_report),
+        Item("Reporte de Generaciones", Console.generations_report)
     ]
     report_sub_menu = _generate_sub_menu(
         report_sub_menu,
@@ -80,6 +80,6 @@ def _generate_sub_menu(sub_menu, items):
 if __name__ != "__main__":
     from exercise1.presentation.ui_console_menu import Menu
     from exercise1.presentation.ui_console_item import Item
-    from exercise1.presentation.ui_console import Console 
+    import exercise1.presentation.ui_console as Console 
     import exercise1.presentation.graphics as graphics
     import exercise1.logic.report as report
