@@ -5,20 +5,21 @@ class Individual():
     def __init__(self, genes=None):
         if genes is None:
             bits = Settings.get_individual_bits()
-            genes = self.__generate_gene_string(bits)
+            genes = self._generate_gene_string(bits)
         self.genes = genes
         self.amount_genes = len(self.genes)
-        self.target = None
+        self._gene_int = self.get_gene()
+        self.target = target_function(self._gene_int)
         self.fitness = None
 
-    def __generate_gene_string(self, length):
+    def _generate_gene_string(self, length):
         maximum = 2 ** length - 1
         dec_gene = util.get_random_number(0, maximum)
         bin_gene = util.dec_bin(dec_gene)
-        gene = self.__fill(bin_gene, length)
+        gene = self._fill(bin_gene, length)
         return gene
 
-    def __fill(self, raw, lenght, neutral="0"):
+    def _fill(self, raw, lenght, neutral="0"):
         raw_gene = list(raw)
         while len(raw_gene) < lenght:
             raw_gene.insert(0, neutral)
@@ -27,14 +28,18 @@ class Individual():
 
     def mutate(self, inverse=True, func=None):
         """Mutate the genes string"""
-        index = self.__pick_random_gene()
+        index = self._pick_random_gene()
         if inverse:
-            mutated_genes = self.inverse_gene(index)
+            mutated_genes = self._inverse_gene(index)
         else:
             mutated_genes = func()
-        self.set_genes_string(mutated_genes)
+        self._set_genes_string(mutated_genes)
 
-    def inverse_gene(self, index):
+    def _pick_random_gene(self):
+        index = util.get_random_number(0, self.amount_genes -1)
+        return index
+
+    def _inverse_gene(self, index):
         genes = list(self.genes)
         gene = genes[index]
         if gene == "1":
@@ -44,17 +49,11 @@ class Individual():
         genes = "".join(genes)
         return genes
 
-    def set_genes_string(self, genes_string):
+    def _set_genes_string(self, genes_string):
         self.genes = genes_string
 
-    def __pick_random_gene(self):
-        index = util.get_random_number(0, self.amount_genes -1)
-        return index
-
-    def fit(self, target, total):
+    def fit(self, total):
         """Calc the fitness value of this individual."""
-        usable_gene = self.get_gene()
-        self.target = target(usable_gene)
         self.fitness = self.target / total
 
     def get_gene(self):
@@ -79,4 +78,5 @@ class Individual():
 
 if __name__ != "__main__":
     from exercise1.logic.settings import Settings
+    from exercise1.logic.target import target as target_function
     import exercise1.util.util as util
