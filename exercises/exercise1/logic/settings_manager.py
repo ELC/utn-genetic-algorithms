@@ -6,8 +6,8 @@ class Settings():
     cross_over_prob = None
     mutation_prob = None
     population_size = None
-    individual_bits = None
-    report = None
+    chromosome_bits = None
+    elitism = None
 
     @classmethod
     def get_generations(cls):
@@ -30,14 +30,14 @@ class Settings():
         return cls.population_size
 
     @classmethod
-    def get_individual_bits(cls):
+    def get_chromosome_bits(cls):
         cls.load_settings()
-        return cls.individual_bits
+        return cls.chromosome_bits
 
     @classmethod
-    def get_report(cls):
+    def get_elitism(cls):
         cls.load_settings()
-        return cls.report
+        return cls.elitism
 
     @classmethod
     def set_generations(cls, value):
@@ -64,15 +64,15 @@ class Settings():
         cls.__set_settings()
 
     @classmethod
-    def set_individual_bits(cls, value):
+    def set_chromosome_bits(cls, value):
         cls.load_settings()
-        cls.individual_bits = value
+        cls.chromosome_bits = value
         cls.__set_settings()
 
     @classmethod
-    def set_report(cls, value):
+    def set_elitism(cls, value):
         cls.load_settings()
-        cls.report = value
+        cls.elitism = value
         cls.__set_settings()
 
     @classmethod
@@ -83,8 +83,8 @@ class Settings():
         cls.cross_over_prob = settings["cross_over_prob"]
         cls.mutation_prob = settings["mutation_prob"]
         cls.population_size = settings["population_size"]
-        cls.individual_bits = settings["individual_bits"]
-        cls.report = settings["report"]
+        cls.chromosome_bits = settings["chromosome_bits"]
+        cls.elitism = settings["elitism"]
 
     @classmethod
     def load_all_settings(cls):
@@ -100,21 +100,23 @@ class Settings():
             "cross_over_prob":cls.cross_over_prob,
             "mutation_prob":cls.mutation_prob,
             "population_size":cls.population_size,
-            "individual_bits":cls.individual_bits,
-            "report":cls.report
+            "chromosome_bits":cls.chromosome_bits,
+            "elitism":cls.elitism
         }
         filemanager.set_settings(settings)
 
-    @staticmethod
-    def store_results(results):
-        """Send the results to the file manager"""
-        filemanager.store_results(results)
-
-    @staticmethod
-    def load_results():
-        """Load the results from the file manager"""
-        results = filemanager.load_results()
-        return results
+    @classmethod
+    def reset_configuration(cls):
+        """Write Configuration File."""
+        settings = {
+            "generations":10,
+            "cross_over_prob":0.9,
+            "mutation_prob":0.001,
+            "population_size":20,
+            "chromosome_bits":5,
+            "elitism":False
+        }
+        filemanager.set_settings(settings)
 
 if __name__ != "__main__":
     import exercise1.data.filemanager as filemanager

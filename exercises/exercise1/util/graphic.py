@@ -1,5 +1,7 @@
 """Graphics Module"""
 
+import matplotlib.pyplot as plt
+
 def graphics(datas, labels):
     """Plot several graph with its labels."""
     plt.figure(figsize=(17, 9))
@@ -9,14 +11,16 @@ def graphics(datas, labels):
     plt.xlabel('Generaciones')
     plt.title('Algoritmo Genético')
 
-    yticks = __get_y_ticks(datas)
-    ax1.set_yticks(yticks)
-
     for data, label in zip(datas, labels):
         x_data = [i for i, _ in enumerate(data)]
-        ax1.set_xticks(x_data[::2])
+        ax1.set_xticks(x_data)
         y_data = data
-
+        #print(data)
+        maximum = int(max(data))
+        sticks = (i for i in range(0, maximum+1, 2))
+        unique_sticks = set(sticks)
+        yticsk = sorted(unique_sticks)
+        #ax1.set_yticks(yticsk)
         ax1.plot(x_data, y_data, label=label)
     plt.legend()
     plt.show()

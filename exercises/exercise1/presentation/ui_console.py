@@ -5,7 +5,7 @@ def main():
     menu.execute()
 
 def execute():
-    Algorithm()
+    Controller.execute()
     full_report()
 
 def _border(printable_string):
@@ -51,13 +51,13 @@ def set_cross_over_prob():
     Settings.set_cross_over_prob(float_value)
     _updated_settings()
 
-def set_individual_bits():
-    """Set the individual bits"""
-    actual_value = Settings.get_individual_bits()
+def set_chromosome_bits():
+    """Set the chromosome bits"""
+    actual_value = Settings.get_chromosome_bits()
     print("Valor actual: " + str(actual_value))
     value = input("Ingrese nuevo valor: ")
     int_value = int(value)
-    Settings.set_individual_bits(int_value)
+    Settings.set_chromosome_bits(int_value)
     _updated_settings()
 
 def set_generations():
@@ -87,28 +87,28 @@ def set_population_size():
     Settings.set_population_size(int_value)
     _updated_settings()
 
-def set_report():
-    """Set the report status"""
-    actual_value = Settings.get_report()
+def set_elitism(): 
+    """Set the elitism status""" 
+    actual_value = Settings.get_elitism() 
     print("Valor actual: " + str(actual_value))
     value = input("Ingrese nuevo valor [1=True, 0=False]: ")
     boolean_value = value == "1"
-    Settings.set_report(boolean_value)
+    Settings.set_elitism(boolean_value) 
     _updated_settings()
 
 
 if __name__ == "__main__":
     import pandas as pd
-    from exercise1.logic.settings import Settings
-    from exercise1.logic.algorithm import Algorithm
+    from exercise1.logic.settings_manager import Settings
+    import exercise1.logic.controller as Controller
     from exercise1.presentation.ui_console_menu_builder import build as menu_build
     import exercise1.logic.report as report
     main()
 
 if __name__ != "__main__":
     import pandas as pd
-    from exercise1.logic.settings import Settings
-    from exercise1.logic.algorithm import Algorithm
+    from exercise1.logic.settings_manager import Settings
+    import exercise1.logic.controller as Controller
     from exercise1.presentation.ui_console_menu_builder import build as menu_build
     import exercise1.logic.report as report
 

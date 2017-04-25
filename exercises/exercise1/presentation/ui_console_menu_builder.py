@@ -47,11 +47,12 @@ def __generate_settings_menu():
     settings_sub_menu_items = [
         Item("Mostrar configuracion actual", Console.show_settings),
         Item("Cambiar probabilidad de Cross Over", Console.set_cross_over_prob),
-        Item("Cambiar cantidad de bits de los individuos", Console.set_individual_bits),
+        Item("Cambiar cantidad de bits de los cromosomas", Console.set_chromosome_bits),
         Item("Cambiar cantidad maxima de generaciones", Console.set_generations),
         Item("Cambiar probabilidad de mutación", Console.set_mutation_prob),
         Item("Cambiar Tamaño inicial de la población", Console.set_population_size),
-        Item("Cambiar mostrar reporte (en desuso)", Console.set_report)
+        Item("Cambiar Modo Elitista", Console.set_elitism),
+        Item("Reiniciar configuracion por defecto", Settings.reset_configuration)
     ]
     settings_sub_menu = _generate_sub_menu(
         settings_sub_menu,
@@ -63,7 +64,6 @@ def __generate_graphic_menu():
     graphic_sub_menu = Menu("Graficos")
     graphic_sub_menu_items = [
         Item("Graficar Maximos, minimos y promedios", graphics.graphic_mma),
-        Item("Graficar mínimos cuadrados", graphics.graphic_ls),
         Item("Graficar Rango", graphics.graphic_r),
     ]
     graphic_sub_menu = _generate_sub_menu(
@@ -80,6 +80,6 @@ def _generate_sub_menu(sub_menu, items):
 if __name__ != "__main__":
     from exercise1.presentation.ui_console_menu import Menu
     from exercise1.presentation.ui_console_item import Item
-    import exercise1.presentation.ui_console as Console 
+    import exercise1.presentation.ui_console as Console
     import exercise1.presentation.graphics as graphics
-    import exercise1.logic.report as report
+    from exercise1.logic.settings_manager import Settings

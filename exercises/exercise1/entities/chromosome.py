@@ -1,43 +1,24 @@
-"""Individual Class"""
+"""Chromosome Class"""
 
-class Individual():
-    """Individual class"""
+class Chromosome():
+    """Chromosome class"""
     def __init__(self, genes=None):
         if genes is None:
-            bits = Settings.get_individual_bits()
-            genes = self._generate_gene_string(bits)
+            number_of_bits = Settings.get_chromosome_bits()
+            genes = util.get_random_number_string(number_of_bits, binary=True)
         self.genes = genes
         self.amount_genes = len(self.genes)
-        self._gene_int = self.get_gene()
-        self.target = target_function(self._gene_int)
+        self.target = target_function(self.get_gene_int())
         self.fitness = None
-
-    def _generate_gene_string(self, length):
-        maximum = 2 ** length - 1
-        dec_gene = util.get_random_number(0, maximum)
-        bin_gene = util.dec_bin(dec_gene)
-        gene = self._fill(bin_gene, length)
-        return gene
-
-    def _fill(self, raw, lenght, neutral="0"):
-        raw_gene = list(raw)
-        while len(raw_gene) < lenght:
-            raw_gene.insert(0, neutral)
-        filled_gene = "".join(raw_gene)
-        return filled_gene
 
     def mutate(self, inverse=True, func=None):
         """Mutate the genes string"""
-        index = self._pick_random_gene()
+        index = util.get_random_number(0, self.amount_genes -1)
         if inverse:
             mutated_genes = self._inverse_gene(index)
         else:
             mutated_genes = func()
         self._set_genes_string(mutated_genes)
-
-    def _pick_random_gene(self):
-        index = util.get_random_number(0, self.amount_genes -1)
-        return index
 
     def _inverse_gene(self, index):
         genes = list(self.genes)
@@ -53,10 +34,10 @@ class Individual():
         self.genes = genes_string
 
     def fit(self, total):
-        """Calc the fitness value of this individual."""
+        """Calc the fitness value of this chromosome."""
         self.fitness = self.target / total
 
-    def get_gene(self):
+    def get_gene_int(self):
         """Return the genes in decimal format."""
         return int(self.genes, 2)
 
@@ -65,18 +46,18 @@ class Individual():
         return self.genes
 
     def get_target(self):
-        """Return the target value of this individual."""
+        """Return the target value of this chromosome."""
         return self.target
 
     def get_fitness(self):
-        """Return the fitness value of this individual."""
+        """Return the fitness value of this chromosome."""
         return self.fitness
 
     def get_size(self):
-        """Return the amout of genes of this individual."""
+        """Return the amout of genes of this chromosome."""
         return self.amount_genes
 
 if __name__ != "__main__":
-    from exercise1.logic.settings import Settings
+    from exercise1.logic.settings_manager import Settings
     from exercise1.logic.target import target as target_function
     import exercise1.util.util as util
