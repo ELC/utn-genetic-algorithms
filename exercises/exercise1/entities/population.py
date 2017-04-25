@@ -10,6 +10,7 @@ class Population():
         self.childs = []
         self.fathers = []
         self.generation = "Final"
+        self._fit_population()
 
     def set_generation(self, value):
         """Set the generation it corresponds"""
@@ -38,18 +39,18 @@ class Population():
 
     def evolve(self):
         """Prepare the next generation."""
-        self._fit_population()
 
         self._choose_fathers()
 
         self._cross_over()
 
+        self._mutate()
+
         elitism = Settings.get_elitism()
         if elitism:
-            fittest_chromosome = self.get_fittest_chromosome()
-            self.childs[0] = fittest_chromosome
-
-        self._mutate()
+            childs = self.get_fittest_chromosomes()
+            self.childs.append(childs[0])
+            self.childs.append(childs[1])
 
     def _fit_population(self):
         target_total = self.get_sum()
@@ -58,6 +59,9 @@ class Population():
 
     def _choose_fathers(self):
         number = self.amount
+        elitism = Settings.get_elitism()
+        if elitism:
+            number -= 2
         probabilities = self.get_fitness()
         for _ in range(number):
             chromosome = util.choose_n_elements_from_narray(self.chromosomes, probabilities)
@@ -104,17 +108,22 @@ class Population():
         child2 = Chromosome(genes=child2_gene_string)
         return child1, child2
 
-    def get_fittest_chromosome(self):
+    def get_fittest_chromosomes(self):
         """Return one chromosome with the highest fitness value"""
         max_fitness = self.get_max_fitness()
-        for chromosome in self.chromosomes:
-            if chromosome.get_fitness() == max_fitness:
-                return chromosome
+        chromosomes = []
+        for maximum in max_fitness:
+            for chromosome in self.chromosomes:
+                if chromosome.get_fitness() == maximum:
+                    chromosomes.append(chromosome)
+                    break
+        return chromosomes
 
     def get_max_fitness(self):
         """Return the maximum value of fitness"""
         fitness = self.get_fitness()
-        return max(fitness)
+        fitness_sorted_list = sorted(fitness, reverse=True)
+        return fitness_sorted_list[:2]
 
     def _mutate(self):
         mutation_prob = Settings.get_mutation_prob()
@@ -136,6 +145,13 @@ class Population():
             chromosome_target = chromosome.get_target()
             targets.append(chromosome_target)
         return targets
+
+    def get_max_gene_string(self):
+        fitness = self.get_fitness()
+        max_fitness = max(fitness)
+        for chromosome in self.chromosomes:
+            if chromosome.get_fitness() == max_fitness:
+                return chromosome.get_gene_string()
 
 
 if __name__ != "__main__":

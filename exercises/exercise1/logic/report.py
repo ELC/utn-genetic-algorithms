@@ -3,6 +3,12 @@
 import exercise1.logic.population_manager as population_manager
 import pandas as pd
 
+pd.set_option('display.height', 1000)
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
+pd.set_option('precision',20)
+
 def full_report():
     """Show all the reports"""
     gens = generations_report()
@@ -12,11 +18,11 @@ def full_report():
 def generations_report():
     """Show the generations report"""
     data = population_manager.load_populations()
-    data_pd = _get_data_frame(data)
 
-    gens = [i for i, _ in enumerate(data)]
-
-    data_frame = pd.DataFrame.from_items(data_pd, orient='index', columns=gens)
+    datas = _get_array_data(data)
+    labels = ("1-Máximo", "2-Mínimo", "3-Promedio", "5-Rango", "4-Total", "6-Cromosoma")
+    data_pd = {i:pd.Series(j) for i, j in zip(labels, datas)}
+    data_frame = pd.DataFrame(data_pd)
 
     return data_frame
 
@@ -27,14 +33,12 @@ def solution_report():
     solution = last_population.get_maximum()
     return solution
 
-def _get_data_frame(data):
-    datas = _get_array_data(data)
-    labels = ("Máximo", "Mínimo", "Promedio", "Rango")
-    return [(i, j) for i, j in zip(labels, datas)]
 
 def _get_array_data(data):
-    maximums = [i.get_maximum() for i in data]
-    minimums = [i.get_minimum() for i in data]
-    averages = [i.get_average() for i in data]
-    ranges = [i.get_range() for i in data]
-    return (maximums, minimums, averages, ranges)
+    maximums = [population.get_maximum() for population in data]
+    minimums = [population.get_minimum() for population in data]
+    averages = [population.get_average() for population in data]
+    ranges = [population.get_range() for population in data]
+    total = [population.get_sum() for population in data]
+    chromosome = [population.get_max_gene_string() for population in data]
+    return (maximums, minimums, averages, ranges, total, chromosome)
