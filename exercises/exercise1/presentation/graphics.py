@@ -9,11 +9,11 @@ def graphic_mma():
     graphics((maximums, averages, minimums), labels)
 
 def graphic_r():
-    ranges = list(population_manager.get_ranges())
+    ranges = [population_manager.get_ranges()]
     labels = ["Rangos"]
     graphics(ranges, labels)
 
 def graphic_t():
-    totals = list(population_manager.get_totals())
+    totals = [population_manager.get_totals()]
     labels = ["Totales"]
     graphics(totals, labels)

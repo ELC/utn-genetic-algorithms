@@ -52,10 +52,10 @@ def _get_stationary(data):
     stationary = []
     last_value = 0
     for population in data:
+        stationary.append(last_value)
         if population.get_max_gene_string() != aux:
             aux = population.get_max_gene_string()
             last_value = population.get_generation()
-        stationary.append(last_value)
     return stationary
 
 
