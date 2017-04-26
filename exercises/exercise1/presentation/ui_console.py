@@ -87,28 +87,24 @@ def set_population_size():
     Settings.set_population_size(int_value)
     _updated_settings()
 
-def set_elitism(): 
-    """Set the elitism status""" 
-    actual_value = Settings.get_elitism() 
+def set_elitism():
+    """Set the elitism status"""
+    actual_value = Settings.get_elitism()
     print("Valor actual: " + str(actual_value))
     value = input("Ingrese nuevo valor [1=True, 0=False]: ")
     boolean_value = value == "1"
-    Settings.set_elitism(boolean_value) 
+    Settings.set_elitism(boolean_value)
     _updated_settings()
 
 
 if __name__ == "__main__":
-    import pandas as pd
-    from exercise1.logic.settings_manager import Settings
-    import exercise1.logic.controller as Controller
     from exercise1.presentation.ui_console_menu_builder import build as menu_build
-    import exercise1.logic.report as report
     main()
 
 if __name__ != "__main__":
     import pandas as pd
-    from exercise1.logic.settings_manager import Settings
     import exercise1.logic.controller as Controller
-    from exercise1.presentation.ui_console_menu_builder import build as menu_build
     import exercise1.logic.report as report
+    from exercise1.logic.settings_manager import Settings
+    from exercise1.presentation.ui_console_menu_builder import build as menu_build
 
