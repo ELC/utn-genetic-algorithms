@@ -3,6 +3,7 @@
 class Population():
     """Population Class."""
     def __init__(self, chromosomes=None):
+        """Creates a new population"""
         self.amount = Settings.get_population_size()
         if chromosomes is None:
             chromosomes = [Chromosome() for i in range(self.amount)]
@@ -17,22 +18,28 @@ class Population():
         self.generation = value
 
     def get_maximum(self):
+        """Return the maximum target value of the chromosomes"""
         targets = self.get_targets()
         return max(targets)
 
     def get_minimum(self):
+        """Return the minimum target value of the chromosomes"""
         targets = self.get_targets()
         return min(targets)
 
     def get_sum(self):
+        """Return the sum of all the target values of the chromosomes"""
         targets = self.get_targets()
         return sum(targets)
 
     def get_average(self):
+        """Return the average of all the target values of the chromosomes"""
         suma = self.get_sum()
         return suma / self.amount
 
     def get_range(self):
+        """Return the difference between the maximum and the minimum target
+            values of the chromosomes"""
         maximum = self.get_maximum()
         minimum = self.get_minimum()
         return maximum - minimum
@@ -58,6 +65,9 @@ class Population():
             chromosome.fit(target_total)
 
     def _choose_fathers(self):
+        """Return a list with the fathers, the fathers are chosen acording to
+            their fitness value, it will choose as many fathers as the size
+            of the population and if elitism, as many as the size minus 2"""
         number = self.amount
         elitism = Settings.get_elitism()
         if elitism:
@@ -97,11 +107,13 @@ class Population():
         return child1, child2
 
     def split_chromosome(self, chromosome, split_point):
-        """Return the gene string of a chromosome split at the split_point"""
+        """Given a chromosome and a split_point, return the gene string of the
+            chromosome split at the split_point"""
         gene_string = chromosome.get_gene_string()
         return [gene_string[:split_point], gene_string[split_point:]]
 
     def _mix(self, father1, father2):
+        """Given two genes strings split at 1 point, return them mixed"""
         child1_gene_string = "".join((father2[0], father1[1]))
         child2_gene_string = "".join((father1[0], father2[1]))
         child1 = Chromosome(genes=child1_gene_string)
@@ -109,7 +121,7 @@ class Population():
         return child1, child2
 
     def get_fittest_chromosomes(self):
-        """Return one chromosome with the highest fitness value"""
+        """Return the two chromosome with the highest fitness value"""
         max_fitness = self.get_max_fitness()
         chromosomes = []
         for maximum in max_fitness:
@@ -120,12 +132,13 @@ class Population():
         return chromosomes
 
     def get_max_fitness(self):
-        """Return the maximum value of fitness"""
+        """Return a list with the 1st and 2nd maximum values of fitness"""
         fitness = self.get_fitness()
         fitness_sorted_list = sorted(fitness, reverse=True)
         return fitness_sorted_list[:2]
 
     def _mutate(self):
+        """Mutate each chromosome when appropiate"""
         mutation_prob = Settings.get_mutation_prob()
         precision = util.get_precision(mutation_prob)
         for chromosome in self.childs:
@@ -134,7 +147,7 @@ class Population():
                 chromosome.mutate()
 
     def get_next_generation(self):
-        """Replace the old generation with the new one."""
+        """Return a new population with this one's childs as chromosomes"""
         next_generation = Population(chromosomes=self.childs)
         return next_generation
 
@@ -152,7 +165,6 @@ class Population():
         for chromosome in self.chromosomes:
             if chromosome.get_fitness() == max_fitness:
                 return chromosome.get_gene_string()
-
 
 if __name__ != "__main__":
     from exercise1.logic.settings_manager import Settings

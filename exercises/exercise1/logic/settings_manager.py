@@ -1,4 +1,4 @@
-"""Settings Class"""
+"""Settings Manager, sets, gets and resets the configuration"""
 
 class Settings():
     """Settings for the algorithm."""

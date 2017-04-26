@@ -3,6 +3,7 @@
 class Chromosome():
     """Chromosome class"""
     def __init__(self, genes=None):
+        """Creates a new chromosome"""
         if genes is None:
             number_of_bits = Settings.get_chromosome_bits()
             genes = util.get_random_number_string(number_of_bits, binary=True)
@@ -18,9 +19,11 @@ class Chromosome():
             mutated_genes = self._inverse_gene(index)
         else:
             mutated_genes = func()
+        """Mutate the genes string using inversion"""
         self._set_genes_string(mutated_genes)
 
     def _inverse_gene(self, index):
+        """Given an index, change the value of the gene in that index"""
         genes = list(self.genes)
         gene = genes[index]
         if gene == "1":
@@ -31,6 +34,7 @@ class Chromosome():
         return genes
 
     def _set_genes_string(self, genes_string):
+        """Change the gene string of the chromosome"""
         self.genes = genes_string
 
     def fit(self, total):
