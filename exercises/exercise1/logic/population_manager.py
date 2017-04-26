@@ -19,6 +19,7 @@ def reset_populations():
     """Delete all the populations in the results file and reset the generations
         counter"""
     results = []
+    Population.reset_generations()
     filemanager.store_results(results)
 
 def get_maximums():
@@ -50,3 +51,4 @@ def get_totals():
 
 if __name__ != '__main__':
     import exercise1.data.filemanager as filemanager
+    from exercise1.entities.population import Population

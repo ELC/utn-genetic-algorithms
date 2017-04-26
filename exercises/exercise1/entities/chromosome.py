@@ -8,8 +8,6 @@ class Chromosome():
             number_of_bits = Settings.get_chromosome_bits()
             genes = util.get_random_number_string(number_of_bits, binary=True)
         self.genes = genes
-        self.amount_genes = len(self.genes)
-        self.target = target_function(self.get_gene_int())
         self.fitness = None
 
     def mutate(self):
@@ -41,7 +39,9 @@ class Chromosome():
 
     def get_target(self):
         """Return the target value of this chromosome."""
-        return self.target
+        gene_string = self.get_gene_string()
+        gene_dec_value = util.bin_to_dec(gene_string)
+        return target_function(gene_dec_value)
 
     def get_fitness(self):
         """Return the fitness value of this chromosome."""
