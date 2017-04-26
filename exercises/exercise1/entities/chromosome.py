@@ -12,24 +12,18 @@ class Chromosome():
         self.target = target_function(self.get_gene_int())
         self.fitness = None
 
-    def mutate(self, inverse=True, func=None):
-        """Mutate the genes string"""
-        index = util.get_random_number(0, self.amount_genes -1)
-        if inverse:
-            mutated_genes = self._inverse_gene(index)
-        else:
-            mutated_genes = func()
+    def mutate(self):
         """Mutate the genes string using inversion"""
+        amount_of_genes = len(self.genes)
+        index = util.get_random_number(0, amount_of_genes - 1)
+        mutated_genes = self._inverse_gene(index)
         self._set_genes_string(mutated_genes)
 
     def _inverse_gene(self, index):
         """Given an index, change the value of the gene in that index"""
         genes = list(self.genes)
         gene = genes[index]
-        if gene == "1":
-            genes[index] = "0"
-        else:
-            genes[index] = "1"
+        genes[index] = "1" if gene == "0" else "0"
         genes = "".join(genes)
         return genes
 
@@ -39,11 +33,7 @@ class Chromosome():
 
     def fit(self, total):
         """Calc the fitness value of this chromosome."""
-        self.fitness = self.target / total
-
-    def get_gene_int(self):
-        """Return the genes in decimal format."""
-        return int(self.genes, 2)
+        self.fitness = self.get_target() / total
 
     def get_gene_string(self):
         """Return the genes string."""
@@ -56,10 +46,6 @@ class Chromosome():
     def get_fitness(self):
         """Return the fitness value of this chromosome."""
         return self.fitness
-
-    def get_size(self):
-        """Return the amout of genes of this chromosome."""
-        return self.amount_genes
 
 if __name__ != "__main__":
     from exercise1.logic.settings_manager import Settings

@@ -8,13 +8,13 @@ def execute():
     for i in range(generations):
         population_manager.add_population(next_generation)
         actual_generation = next_generation
-        actual_generation.set_generation(i)
         actual_generation.evolve()
         next_generation = actual_generation.get_next_generation()
         convergence = next_generation.get_range()
         if convergence == 0:
             break
     population_manager.add_population(next_generation)
+
 
 if __name__ != '__main__':
     import exercise1.logic.population_manager as population_manager
