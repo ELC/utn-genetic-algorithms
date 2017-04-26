@@ -3,11 +3,10 @@
 import exercise1.logic.population_manager as population_manager
 import pandas as pd
 
-pd.set_option('display.height', 1000)
-pd.set_option('display.max_rows', 500)
-pd.set_option('display.max_columns', 500)
-pd.set_option('display.width', 1000)
-pd.set_option('precision',20)
+pd.set_option('display.max_rows', 1500)
+pd.set_option('display.max_columns', 700)
+pd.set_option('display.width', 1500)
+pd.set_option('precision', 12)
 
 def full_report():
     """Show all the reports"""
@@ -18,9 +17,14 @@ def full_report():
 def generations_report():
     """Show the generations report"""
     data = population_manager.load_populations()
-
     datas = _get_array_data(data)
-    labels = ("1-Máximo", "2-Mínimo", "3-Promedio", "5-Rango", "4-Total", "6-Cromosoma")
+    labels = ("1-Máximo",
+              "2-Mínimo",
+              "3-Promedio",
+              "5-Rango",
+              "4-Total",
+              "6-Cromosoma",
+              "7-Estable")
     data_pd = {i:pd.Series(j) for i, j in zip(labels, datas)}
     data_frame = pd.DataFrame(data_pd)
 
@@ -33,7 +37,6 @@ def solution_report():
     solution = last_population.get_maximum()
     return solution
 
-
 def _get_array_data(data):
     maximums = [population.get_maximum() for population in data]
     minimums = [population.get_minimum() for population in data]
@@ -41,4 +44,18 @@ def _get_array_data(data):
     ranges = [population.get_range() for population in data]
     total = [population.get_sum() for population in data]
     chromosome = [population.get_max_gene_string() for population in data]
-    return (maximums, minimums, averages, ranges, total, chromosome)
+    stationary = _get_stationary(data)
+    return (maximums, minimums, averages, ranges, total, chromosome, stationary)
+
+def _get_stationary(data):
+    aux = data[0].get_max_gene_string()
+    stationary = []
+    last_value = 0
+    for population in data:
+        if population.get_max_gene_string() != aux:
+            aux = population.get_max_gene_string()
+            last_value = population.get_generation()
+        stationary.append(last_value)
+    return stationary
+
+
