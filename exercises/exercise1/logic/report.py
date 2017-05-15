@@ -2,6 +2,8 @@
 
 import exercise1.logic.population_manager as population_manager
 import pandas as pd
+import time 
+from openpyxl import load_workbook
 
 pd.set_option('display.max_rows', 1500)
 pd.set_option('display.max_columns', 700)
@@ -27,8 +29,28 @@ def generations_report():
               "7-Estable")
     data_pd = {i:pd.Series(j) for i, j in zip(labels, datas)}
     data_frame = pd.DataFrame(data_pd)
-
+    write_excel(data_frame)
     return data_frame
+
+def write_excel(df):
+    sheet_name = str(time.strftime("%Y-%m-%d %H.%M.%S"))
+    filename = 'resultados.xlsx'
+    writer = pd.ExcelWriter(filename, engine='openpyxl')
+    #df.to_excel(writer, index=False, sheet_name=sheet_name)
+
+    # Get the xlsxwriter objects from the dataframe writer object.
+    try:
+        writer.book = load_workbook(filename)
+        writer.sheets = dict(
+            (ws.title, ws) for ws in writer.book.worksheets)
+    except:
+        pass
+
+    df.to_excel(writer, sheet_name=sheet_name)
+
+    writer.save()
+    writer.close()
+
 
 def solution_report():
     """Show the final solution infered from the generations"""
