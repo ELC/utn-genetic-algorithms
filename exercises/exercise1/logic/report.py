@@ -4,6 +4,7 @@ import exercise1.logic.population_manager as population_manager
 import pandas as pd
 import time 
 from openpyxl import load_workbook
+from exercise1.logic.settings_manager import Settings
 
 pd.set_option('display.max_rows', 1500)
 pd.set_option('display.max_columns', 700)
@@ -36,9 +37,7 @@ def write_excel(df):
     sheet_name = str(time.strftime("%Y-%m-%d %H.%M.%S"))
     filename = 'resultados.xlsx'
     writer = pd.ExcelWriter(filename, engine='openpyxl')
-    #df.to_excel(writer, index=False, sheet_name=sheet_name)
 
-    # Get the xlsxwriter objects from the dataframe writer object.
     try:
         writer.book = load_workbook(filename)
         writer.sheets = dict(
@@ -46,7 +45,9 @@ def write_excel(df):
     except:
         pass
 
-    df.to_excel(writer, sheet_name=sheet_name)
+    settings = Settings.load_all_settings()
+    pd.DataFrame(list(settings.items())).to_excel(writer, sheet_name=sheet_name, index=False, startcol=8)
+    df.to_excel(writer, sheet_name=sheet_name, index=False)
 
     writer.save()
     writer.close()
