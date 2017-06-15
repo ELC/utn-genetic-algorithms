@@ -1,9 +1,13 @@
 """Controller module"""
+import timeit
+total_time = 0
 
 def execute():
     """Start the process of evolution."""
+    global total_time
     population_manager.reset_populations()
     generations = Settings.get_generations()
+    start_time = timeit.default_timer()
     next_generation = Population()
     for _ in range(generations-1):
         population_manager.add_population(next_generation)
@@ -13,6 +17,7 @@ def execute():
         convergence = next_generation.get_range()
         if convergence == 0:
             break
+    total_time = timeit.default_timer() - start_time
     population_manager.add_population(next_generation)
 
 def show_settings():
@@ -24,7 +29,16 @@ def get_generation_report():
     return report.generations_report()
 
 def get_solution_report():
-    return report.solution_report()
+    return report.solution_report() 
+
+def get_execution_time():
+    global total_time
+    return total_time
+
+def get_decimal_value_report():
+    population = population_manager.get_last_population()
+    gene_string = population.get_max_gene_string()
+    return int(gene_string, 2)
 
 def get_cross_over_prob():
     return Settings.get_cross_over_prob()

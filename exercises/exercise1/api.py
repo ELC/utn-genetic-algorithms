@@ -1,5 +1,9 @@
 """API"""
 
+def main():
+    menu = menu_build()
+    menu.execute()
+
 def execute():
     Controller.execute()
     full_report()
@@ -15,6 +19,8 @@ def full_report():
     show_settings()
     generations_report()
     solution_report()
+    decimal_value()
+    execution_time()
 
 def generations_report():
     """Print the report of the generations"""
@@ -22,12 +28,28 @@ def generations_report():
     generation_data = Controller.get_generation_report()
     print(generation_data)
 
+def decimal_value():
+    """Print the final solution"""
+    decimal_value_data = Controller.get_decimal_value_report()
+    decimal_value_string = "El valor del cromosoma es: " + str(decimal_value_data)
+    decimal_value_string_formatted = _border(decimal_value_string)
+    print()
+    print(decimal_value_string_formatted)
+
 def solution_report():
     """Print the final solution"""
     solution_data = Controller.get_solution_report()
     solution_string = "La solucion final es: " + str(solution_data)
     solution_string_formatted = _border(solution_string)
+    print()
     print(solution_string_formatted)
+
+def execution_time():
+    execution_time_data = Controller.get_execution_time()
+    execution_string = "Tiempo de ejecucion en segundos: " + str(execution_time_data)
+    execution_string_formatted = _border(execution_string)
+    print()
+    print(execution_string_formatted)
 
 def show_settings():
     """Show basic Configurations."""

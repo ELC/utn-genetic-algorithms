@@ -63,8 +63,8 @@ def _generate_menu(title, items):
     return sub_menu
 
 if __name__ != "__main__":
-    from exercise1.presentation.ui_console_menu_alt import Menu
-    from exercise1.presentation.ui_console_item_alt import Item, ItemClose
+    from exercise1.presentation.ui_console_menu import Menu
+    from exercise1.presentation.ui_console_item import Item, ItemClose
     import exercise1.presentation.ui_console as Console
     import exercise1.presentation.graphics as graphics
     from exercise1.logic.settings_manager import Settings
