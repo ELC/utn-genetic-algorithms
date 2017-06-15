@@ -4,8 +4,8 @@ def build():
     """Create Menu"""
     submenus = [
         _report_menu(),
-        _settings_menu(),
-        _graphic_menu()
+        _graphic_menu(),
+        _settings_menu()
     ]
     main_menu = _main_menu(submenus)
 

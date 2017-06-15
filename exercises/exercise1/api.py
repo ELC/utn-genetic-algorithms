@@ -1,9 +1,5 @@
 """API"""
 
-def main():
-    menu = menu_build()
-    menu.execute()
-
 def execute():
     Controller.execute()
     full_report()

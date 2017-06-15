@@ -21,8 +21,8 @@ def generations_report():
     """Show the generations report"""
     data = population_manager.load_populations()
     datas = _get_array_data(data)
-    labels = ("1-Máximo",
-              "2-Mínimo",
+    labels = ("1-Máx",
+              "2-Mín",
               "3-Promedio",
               "5-Rango",
               "4-Total",
@@ -30,8 +30,33 @@ def generations_report():
               "7-Estable")
     data_pd = {i:pd.Series(j) for i, j in zip(labels, datas)}
     data_frame = pd.DataFrame(data_pd)
+    data_frame.index.names = ['G']
+    # data_frame = data_frame.reindex(data_frame.index.rename("Generacion"))
+    write_csv(data_frame)
     write_excel(data_frame)
     return data_frame
+
+def write_csv(df):
+    name = str(Settings.get_settings_id())[:5]
+    filename = name + '.csv'
+    if is_empty(filename):
+        settings = Settings.load_all_settings()
+        pd.DataFrame(list(settings.items())).to_csv(filename, mode="a+",index=False)
+        add_empty_line(filename)
+    df.to_csv(filename, mode="a+")
+    add_empty_line(filename)
+
+def add_empty_line(filename):
+    with open(filename,"a+") as handler:
+        handler.write('\n')
+
+def is_empty(filename):
+    try:
+        with open(filename) as my_file:
+            pass
+        return False
+    except FileNotFoundError:
+        return True
 
 def write_excel(df):
     sheet_name = str(time.strftime("%Y-%m-%d %H.%M.%S"))
@@ -71,14 +96,13 @@ def _get_array_data(data):
     return (maximums, minimums, averages, ranges, total, chromosome, stationary)
 
 def _get_stationary(data):
-    aux = data[0].get_max_gene_string()
+    aux = ""
     stationary = []
-    last_value = 0
     for population in data:
-        stationary.append(last_value)
         if population.get_max_gene_string() != aux:
             aux = population.get_max_gene_string()
-            last_value = population.get_generation()
+            last_value = int(population.get_generation())-1
+        stationary.append(last_value)
     return stationary
 
 

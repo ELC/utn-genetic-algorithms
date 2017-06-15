@@ -117,6 +117,11 @@ class Settings():
             "elitism":False
         }
         filemanager.set_settings(settings)
+    
+    @classmethod
+    def get_settings_id(cls):
+        settings = filemanager.load_settings()
+        return hash(tuple(sorted(settings.values())))
 
 if __name__ != "__main__":
     import exercise1.data.filemanager as filemanager

@@ -115,4 +115,3 @@ if __name__ == "__main__":
 if __name__ != "__main__":
     import exercise1.logic.controller as Controller
     from exercise1.presentation.ui_console_menu_builder import build as menu_build
-
