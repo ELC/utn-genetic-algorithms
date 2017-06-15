@@ -49,6 +49,10 @@ def get_totals():
     populations = load_populations()
     return [i.get_sum() for i in populations]
 
+def get_last_population():
+    populations = load_populations()
+    return populations[-1]
+
 if __name__ != '__main__':
     import exercise1.data.filemanager as filemanager
     from exercise1.entities.population import Population

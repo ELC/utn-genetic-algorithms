@@ -87,5 +87,5 @@ class Menu:
         self.open = False
 
 if __name__ != "__main__":
-    from exercise1.presentation.ui_console_item_alt import Item, ItemClose
+    from exercise1.presentation.ui_console_item import Item, ItemClose
     import exercise1.presentation.ui_console_util as ui_util
