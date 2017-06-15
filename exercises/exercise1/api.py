@@ -1,43 +1,43 @@
 """API"""
 
-from exercise1.logic.settings_manager import Settings
-from exercise1.logic.algorithm import Algorithm
-
 def execute():
-    """Execute the main algorithm"""
-    Algorithm()
+    Controller.execute()
+    full_report()
 
-def export_results():
-    """Get the results for the previous run"""
-    results = Settings.load_results()
-    return results
+def _border(printable_string):
+    border = "#" * len(printable_string)
+    string = border + "\n" + printable_string + "\n" + border
+    return string
 
-def export_settings():
-    """Get the Settings"""
-    settings = Settings.load_all_settings()
-    return settings
+def full_report():
+    """Print all the reports"""
+    print("La configuración usada fue:")
+    show_settings()
+    generations_report()
+    solution_report()
 
-def set_cross_over_prob(value):
-    """Set the cross over probability"""
-    Settings.set_cross_over_prob(value)
+def generations_report():
+    """Print the report of the generations"""
+    print("Informe por generacion:")
+    generation_data = Controller.get_generation_report()
+    print(generation_data)
 
-def set_individual_bits(value):
-    """Set the individual bits probability"""
-    Settings.set_individual_bits(value)
+def solution_report():
+    """Print the final solution"""
+    solution_data = Controller.get_solution_report()
+    solution_string = "La solucion final es: " + str(solution_data)
+    solution_string_formatted = _border(solution_string)
+    print(solution_string_formatted)
 
-def set_generations(value):
-    """Set the generations probability"""
-    Settings.set_generations(value)
+def show_settings():
+    """Show basic Configurations."""
+    print(Controller.show_settings())
 
-def set_mutation_prob(value):
-    """Set the mutation probability"""
-    Settings.set_mutation_prob(value)
-
-def set_population_size(value):
-    """Set the initial population size"""
-    Settings.set_population_size(value)
-
-def set_report(value):
-    """Set the report status"""
-    Settings.set_report(value)
-
+if __name__ == '__main__':
+    import exercise1.logic.controller as Controller
+    import pandas as pd
+    import exercise1.logic.report as report
+    import exercise1.logic.population_manager as population_manager
+    from exercise1.entities.population import Population
+    from exercise1.logic.settings_manager import Settings
+    execute()
