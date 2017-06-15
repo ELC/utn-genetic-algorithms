@@ -2,49 +2,39 @@
 
 def build():
     """Create Menu"""
-    report_sub_menu = __generate_report_menu()
-    settings_sub_menu = __generate_settings_menu()
-    graphic_sub_menu = __generate_graphic_menu()
     submenus = [
-        report_sub_menu,
-        graphic_sub_menu,
-        settings_sub_menu
+        _report_menu(),
+        _settings_menu(),
+        _graphic_menu()
     ]
-    main_menu = __generate_main_menu(submenus)
+    main_menu = _main_menu(submenus)
 
     return main_menu
 
-def __generate_main_menu(submenus):
+def _main_menu(submenus):
     """Generate the main manu"""
-    menu = Menu("Principal")
+    title = "Principal"
 
     items = [Item("Ejecutar", Console.execute),
             ]
-
     for submenu in submenus:
-        item = Item(submenu.name, submenu.execute)
-        items.append(item)
+        items.append(
+            ItemClose(submenu.name, function=submenu.execute)
+        )
 
-    for item in items:
-        menu.add_item(item)
+    return _generate_menu(title, items)
 
-    return menu
-
-def __generate_report_menu():
-    report_sub_menu = Menu("Reporte")
-    report_sub_menu_items = [
+def _report_menu():
+    title = "Reporte"
+    items = [
         Item("Reporte Completo", Console.full_report),
         Item("Reporte de Generaciones", Console.generations_report)
     ]
-    report_sub_menu = _generate_sub_menu(
-        report_sub_menu,
-        report_sub_menu_items
-        )
-    return report_sub_menu
+    return _generate_menu(title, items)
 
-def __generate_settings_menu():
-    settings_sub_menu = Menu("Configuracion")
-    settings_sub_menu_items = [
+def _settings_menu():
+    title = "Configuracion"
+    items = [
         Item("Mostrar configuracion actual", Console.show_settings),
         Item("Cambiar probabilidad de Cross Over", Console.set_cross_over_prob),
         Item("Cambiar cantidad de bits de los cromosomas", Console.set_chromosome_bits),
@@ -54,32 +44,27 @@ def __generate_settings_menu():
         Item("Cambiar Modo Elitista", Console.set_elitism),
         Item("Reiniciar configuracion por defecto", Settings.reset_configuration)
     ]
-    settings_sub_menu = _generate_sub_menu(
-        settings_sub_menu,
-        settings_sub_menu_items
-        )
-    return settings_sub_menu
 
-def __generate_graphic_menu():
-    graphic_sub_menu = Menu("Graficos")
-    graphic_sub_menu_items = [
+    return _generate_menu(title, items)
+
+def _graphic_menu():
+    title = "Graficos2"
+    items = [
         Item("Graficar Maximos, minimos y promedios", graphics.graphic_mma),
         Item("Graficar Rango", graphics.graphic_r),
     ]
-    graphic_sub_menu = _generate_sub_menu(
-        graphic_sub_menu,
-        graphic_sub_menu_items
-        )
-    return graphic_sub_menu
 
-def _generate_sub_menu(sub_menu, items):
+    return _generate_menu(title, items)
+
+def _generate_menu(title, items):
+    sub_menu = Menu(name=title)
     for item in items:
         sub_menu.add_item(item)
     return sub_menu
 
 if __name__ != "__main__":
-    from exercise1.presentation.ui_console_menu import Menu
-    from exercise1.presentation.ui_console_item import Item
+    from exercise1.presentation.ui_console_menu_alt import Menu
+    from exercise1.presentation.ui_console_item_alt import Item, ItemClose
     import exercise1.presentation.ui_console as Console
     import exercise1.presentation.graphics as graphics
     from exercise1.logic.settings_manager import Settings
