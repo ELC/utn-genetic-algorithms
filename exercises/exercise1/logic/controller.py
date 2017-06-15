@@ -5,7 +5,7 @@ def execute():
     population_manager.reset_populations()
     generations = Settings.get_generations()
     next_generation = Population()
-    for i in range(generations-1):
+    for _ in range(generations-1):
         population_manager.add_population(next_generation)
         actual_generation = next_generation
         actual_generation.evolve()
@@ -30,7 +30,7 @@ def get_cross_over_prob():
     return Settings.get_cross_over_prob()
 
 def set_cross_over_prob(raw_value):
-    value = float(value)
+    value = float(raw_value)
     Settings.set_cross_over_prob(value)
 
 def get_chromosome_bits():
