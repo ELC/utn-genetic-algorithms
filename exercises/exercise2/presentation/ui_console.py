@@ -31,7 +31,7 @@ def generations_report():
 def decimal_value():
     """Print the final solution"""
     decimal_value_data = Controller.get_decimal_value_report()
-    decimal_value_string = "El valor del cromosoma es: " + str(decimal_value_data)
+    decimal_value_string = "Los elementos del cromosoma son: " + str(decimal_value_data)
     decimal_value_string_formatted = _border(decimal_value_string)
     print()
     print(decimal_value_string_formatted)
