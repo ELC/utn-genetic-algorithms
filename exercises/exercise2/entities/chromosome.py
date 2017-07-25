@@ -4,11 +4,23 @@ class Chromosome():
     """Chromosome class"""
     def __init__(self, genes=None):
         """Creates a new chromosome"""
+        self.genes = genes
         if genes is None:
             number_of_bits = Settings.get_chromosome_bits("exercise2")
-            genes = util.get_random_number_string(number_of_bits, binary=True)
-        self.genes = genes
+            self.genes = util.get_random_number_string(number_of_bits, binary=True)
+            self.validate()
         self.fitness = None
+
+    def validate(self):
+        while True:
+            if self.get_target() != 0:
+                return
+            list_genes = list(self.genes)
+            list_ones = [i for i,j in enumerate(list_genes) if j=="1"]
+            remove_index = list_ones[util.get_random_number(0, len(list_ones)-1)]
+            list_genes[remove_index] = "0"
+            self.genes = "".join(list_genes)
+
 
     def mutate(self):
         """Mutate the genes string using inversion"""
@@ -31,7 +43,7 @@ class Chromosome():
 
     def fit(self, total):
         """Calc the fitness value of this chromosome."""
-        self.fitness = self.get_target() / total
+        self.fitness = self.get_target()  / total
 
     def get_gene_string(self):
         """Return the genes string."""

@@ -11,7 +11,7 @@ def execute():
 
     valor_precio.sort(key=lambda k: k[1], reverse=True)
 
-    nro_objetos = [i for i, _ in valor_precio]
+    nro_objetos = (i for i, _ in valor_precio)
 
     acum_vol = 0
     resultados = []
@@ -19,6 +19,8 @@ def execute():
         if acum_vol + objetos[nro_objeto][0] < 4200:
             acum_vol += objetos[nro_objeto][0]
             resultados.append(nro_objeto)
+        else:
+            break
 
     volumen = target.sum_of(resultados, 0)
     price = target.sum_of(resultados, 1)

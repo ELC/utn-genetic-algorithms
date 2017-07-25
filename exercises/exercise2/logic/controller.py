@@ -6,6 +6,7 @@ module = "exercise2"
 
 def execute():
     """Start the process of evolution."""
+    Settings.set_chromosome_bits("exercise2", len(get_objects()))
     global total_time
     reset_populations()
     generations = Settings.get_generations(module)
@@ -104,3 +105,4 @@ if __name__ != '__main__':
     import base.logic.population_manager as population_manager
     from exercise2.entities.population import Population
     from base.logic.settings_manager import Settings
+    from exercise2.main import get_objects
