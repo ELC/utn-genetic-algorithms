@@ -121,7 +121,8 @@ class Settings():
     @classmethod
     def get_settings_id(cls, module):
         settings = filemanager.load_settings(module)
-        return hash(tuple(sorted(settings.values())))
+        return hashlib.sha1(str(sorted(settings.values())).encode('utf-8')).hexdigest()
 
 if __name__ != "__main__":
+    import hashlib
     import base.data.filemanager as filemanager
