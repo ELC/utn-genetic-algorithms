@@ -114,12 +114,12 @@ class Population():
         for (father1, father2) in couples:
             prob = util.get_random_prob(precision=precision)
             if cross_over_prob > prob:
-                childs = self._cross_over_1_point(father1, father2)
+                childs = self._cross_over_cyclic(father1, father2)
             else:
                 childs = father1, father2
             self.childs.extend(childs)
 
-    def _cross_over_1_point(self, father1, father2):
+    def _cross_over_cyclic(self, father1, father2):
         """Perform a 1 point cross over between the given father chromosomes"""
         length = len(father1.get_gene_string())
 

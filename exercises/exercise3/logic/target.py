@@ -16,6 +16,7 @@ def get_distance_from_cities(cities):
     total_distance = 0
     for i in range(len(cities)-1):
         total_distance += calc_distance_beetween_cities(cities[i], cities[i+1])
+    total_distance += calc_distance_beetween_cities(cities[-1], cities[0])
     return total_distance
 
 def get_cities_from_array(array):

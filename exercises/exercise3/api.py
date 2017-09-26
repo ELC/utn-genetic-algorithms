@@ -13,7 +13,6 @@ def execute():
     distance = target.get_distance_from_cities(cities)
 
     show_settings()
-    generations_report()
 
     return execution_time, cities[0], distance, cities, number_generations
 
