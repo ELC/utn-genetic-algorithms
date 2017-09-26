@@ -5,12 +5,14 @@ def execute():
     execution_time = Controller.get_execution_time()
     last_pop = population_manager.get_last_population("Exercise3")
 
+    number_generations = last_pop.generation
+
     best_gene_string = last_pop.get_max_gene_string()
 
     cities = target.get_cities_from_array(best_gene_string)
     distance = target.get_distance_from_cities(cities)
 
-    return execution_time, cities[0], distance, cities
+    return execution_time, cities[0], distance, cities, number_generations
 
 if __name__ == '__main__':
     import exercise3.logic.controller as Controller

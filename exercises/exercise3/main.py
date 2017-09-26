@@ -82,8 +82,13 @@ def main():
     show(time, best_city, ruta, route)
 
     print("\nAlgoritmos geneticos: ")
-    time, best_city, ruta, route = api.execute()
+    time, best_city, ruta, route, number_generations = api.execute()
     show(time, best_city, ruta, route)
+    max_gen = Settings.get_generations("exercise3")
+    if number_generations == max_gen:
+        print("Finalizó por llegar a la cantidad máxima de generaciones - {} generaciones".format(max_gen))
+    else:
+        print("Convergió antes de llegar al máximo de generaciones - Generación: {} - Máxima: {}".format(number_generations, max_gen))
 
     # print("\nExhaustiva: ")
     # time, best_city, ruta, route = exhaustiva.execute()
