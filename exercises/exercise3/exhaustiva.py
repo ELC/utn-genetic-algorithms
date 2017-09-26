@@ -1,7 +1,7 @@
 from itertools import chain, combinations
 
 # Busqueda exhaustiva
-import exercise2.logic.target as target
+import exercise3.logic.target as target
 import timeit
 
 objetos = target.generate_objects(default=True)

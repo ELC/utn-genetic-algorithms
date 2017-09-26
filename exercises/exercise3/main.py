@@ -103,7 +103,7 @@ def show(time, best_city, ruta, route):
 if __name__ == '__main__':
     import exercise3.api as api
     import exercise3.greedy as greedy
-    import exercise3.exhaustiva as exhaustiva
+    #import exercise3.exhaustiva as exhaustiva
     from base.logic.settings_manager import Settings
     
     main()

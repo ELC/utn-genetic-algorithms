@@ -6,7 +6,7 @@ class Population():
 
     def __init__(self, chromosomes=None):
         """Creates a new population"""
-        self.amount = Settings.get_population_size("exercise2")
+        self.amount = Settings.get_population_size("exercise3")
         if chromosomes is None:
             chromosomes = [Chromosome() for i in range(self.amount)]
         self.chromosomes = chromosomes
@@ -79,7 +79,7 @@ class Population():
 
         self._mutate()
 
-        if Settings.get_elitism("exercise2"):
+        if Settings.get_elitism("exercise3"):
             childs = self.get_fittest_chromosomes()
             self.childs.extend(childs)
 
@@ -89,7 +89,7 @@ class Population():
             of the population and if elitism, as many as the size minus 2"""
         fathers = []
         number = self.amount
-        if Settings.get_elitism("exercise2"):
+        if Settings.get_elitism("exercise3"):
             number -= 2
         probabilities = self.get_fitness()
         for _ in range(number):
@@ -186,7 +186,7 @@ class Population():
 
     def _mutate(self):
         """Mutate each chromosome when appropiate"""
-        mutation_prob = Settings.get_mutation_prob("exercise2")
+        mutation_prob = Settings.get_mutation_prob("exercise3")
         precision = util.get_precision(mutation_prob)
         for chromosome in self.childs:
             prob = util.get_random_prob(precision=precision)

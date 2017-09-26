@@ -12,7 +12,21 @@ def execute():
     cities = target.get_cities_from_array(best_gene_string)
     distance = target.get_distance_from_cities(cities)
 
+    show_settings()
+    generations_report()
+
     return execution_time, cities[0], distance, cities, number_generations
+
+
+def show_settings():
+    """Show basic Configurations."""
+    print(Controller.show_settings())
+
+def generations_report():
+    """Print the report of the generations"""
+    print("Informe por generacion:")
+    generation_data = Controller.get_generation_report()
+    print(generation_data)
 
 if __name__ == '__main__':
     import exercise3.logic.controller as Controller

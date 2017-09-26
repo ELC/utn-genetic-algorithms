@@ -32,7 +32,8 @@ def get_generation_report():
     return report.generations_report(module)
 
 def get_solution_report():
-    return report.solution_report(module) 
+    a, b = report.solution_report(module) 
+    return a, 1/b
 
 def get_execution_time():
     global total_time
