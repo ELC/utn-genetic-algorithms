@@ -1,11 +1,21 @@
 """Utilities module, support functions"""
 
-from numpy.random import randint
-from numpy.random import choice
+from numpy.random import randint, choice, permutation
 
 """##################################"""
 """Random Number Generation Functions"""
 """##################################"""
+
+def swap_elements_from_list(listt):
+    lis = listt[:]
+    first = choice(lis)
+    second = choice(lis)
+    first_index, second_index = lis.index(first), lis.index(second)
+    lis[first_index], lis[second_index] = lis[second_index], lis[first_index]
+    return lis
+
+def get_random_permutation(lenght):
+    return list(permutation(lenght))
 
 def get_random_number_string(length, binary=False):
     """Generate a random number either from decimal or binary,
