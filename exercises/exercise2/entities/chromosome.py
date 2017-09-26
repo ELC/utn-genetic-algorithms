@@ -17,6 +17,8 @@ class Chromosome():
                 return
             list_genes = list(self.genes)
             list_ones = [i for i,j in enumerate(list_genes) if j=="1"]
+            if len(list_ones) == 0:
+                break
             remove_index = list_ones[util.get_random_number(0, len(list_ones)-1)]
             list_genes[remove_index] = "0"
             self.genes = "".join(list_genes)

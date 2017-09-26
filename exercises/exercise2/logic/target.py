@@ -34,7 +34,7 @@ def value_of(subset):
     for objeto in subset:
         acum_vol += objeto[0]
         acum_pre += objeto[1]
-        if acum_vol > 4200:
+        if acum_vol > 3000:
             return 0
     return acum_pre
 
