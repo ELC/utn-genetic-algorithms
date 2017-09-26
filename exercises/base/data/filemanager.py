@@ -4,8 +4,8 @@ import json
 
 def load_settings(module):
     """Load Configuration File from binary."""
-    with open(module +'/data/config', 'rb') as handle:
-        settings = pickle.loads(handle.read())
+    with open(module +'/data/config.json', 'rb') as handle:
+        settings = json.loads(handle.read())
     return settings
 
 def set_settings(module, settings):

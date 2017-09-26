@@ -65,6 +65,6 @@ def _generate_menu(title, items):
 if __name__ != "__main__":
     from base.presentation.ui_console_menu import Menu
     from base.presentation.ui_console_item import Item, ItemClose
-    import exercise2.presentation.ui_console as Console
+    import exercise3.presentation.ui_console as Console
     import base.presentation.graphics as graphics
     from base.logic.settings_manager import Settings

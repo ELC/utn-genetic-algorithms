@@ -109,9 +109,9 @@ def set_elitism():
 
 
 if __name__ == "__main__":
-    from exercise2.presentation.ui_console_menu_builder import build as menu_build
+    from exercise3.presentation.ui_console_menu_builder import build as menu_build
     main()
 
 if __name__ != "__main__":
-    import exercise2.logic.controller as Controller
-    from exercise2.presentation.ui_console_menu_builder import build as menu_build
+    import exercise3.logic.controller as Controller
+    from exercise3.presentation.ui_console_menu_builder import build as menu_build
