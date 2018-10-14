@@ -1,7 +1,7 @@
 import turtle
 import colorsys
 
-def createLSystem(numIters, axiom):
+def create_l_system(numIters, axiom):
     startString = axiom
     endString = ""
     for _ in range(numIters):
@@ -11,7 +11,7 @@ def createLSystem(numIters, axiom):
     return endString
 
 
-def drawLsystem(aTurtle, instructions, angle, distance, color):
+def draw_l_system(aTurtle, instructions, angle, distance, color):
     step = 1 / len([i for i in instructions if i in "FB"])
     i = 0
     for cmd in instructions:
@@ -28,23 +28,26 @@ def drawLsystem(aTurtle, instructions, angle, distance, color):
         elif cmd == '-':
             aTurtle.left(angle)
 
-def main(iterations, axiom, angle, length, initial_angle=0, color=False):
-    inst = createLSystem(iterations, axiom)
+def main(iterations, axiom, angle, length, y_offset=0, x_offset=0, offset_angle=0, color=False):
+    inst = create_l_system(iterations, axiom)
 
     t = turtle.Turtle()
     wn = turtle.Screen()
-    t.up()
-    t.backward(0)
-    t.left(90)
-    t.backward(-300)
-    t.right(90)
-    t.left(initial_angle)
+
+
+    if color:
+        wn.bgcolor('black')
+
+    t.up()    
+    t.backward(-x_offset)
+    t.right(270)
+    t.backward(-y_offset)
+    t.left(offset_angle)
     t.down()
     t.speed(0)
-    t.pensize(1)
-    drawLsystem(t, inst, angle, length, color)
+    draw_l_system(t, inst, angle, length, color)
     t.hideturtle()
-
+    
     wn.exitonclick()
 
 
@@ -52,7 +55,7 @@ def main(iterations, axiom, angle, length, initial_angle=0, color=False):
 title = "32-segment curve"
 axiom = "F+F+F+F"
 rules = {"F":"-F+F-F-F+F+FF-F+F+FF+F-F-FF+FF-FF+F+F-FF-F-F+FF-F-F+F+F-F+"}
-iterations = 1
+iterations = 2
 angle = 90
 
 # box fractal
@@ -69,13 +72,11 @@ rules = {"X":"X+YF+", "Y":"-FX-Y"}
 iterations = 11
 angle = 90
 
-
-
 # Hilbert curve
 title = "Hilbert curve"
 axiom = "L"
 rules = {"L":"+RF-LFL-FR+", "R":"-LF+RFR+FL-"}
-iterations = 5
+iterations = 6
 angle = 90
 
 # Hilbert curve II
@@ -85,14 +86,12 @@ rules = {"X":"XFYFX+F+YFXFY-F-XFYFX", "Y":"YFXFY-F-XFYFX+F+YFXFY"}
 iterations = 3
 angle = 90
 
-
 # Koch snowflake
 title = "Koch snowflake"
 axiom = "F--F--F"
 rules = {"F":"F+F--F+F"}
-iterations = 4
+iterations = 3
 angle = 60
-
 
 # Peano curve
 title = "Peano curve"
@@ -108,35 +107,32 @@ rules = {"X":"X+YF++YF-FX--FXFX-YF+", "Y":"-FX+YFYF++YF+FX--FX-Y"}
 iterations = 3
 angle = 60
 
-
-
 # quadratic Koch island
 title = "quadratic Koch island"
 axiom = "F+F+F+F"
 rules = {"F":"F-F+F+FFF-F-F+F"}
-iterations = 3
+iterations = 2
 angle = 90
-
-main(iterations, axiom, angle, 6)
 
 # Sierpiński arrowhead
 title = "Sierpiński arrowhead"
 axiom = "YF"
 rules = {"X":"YF+XF+Y", "Y":"XF-YF-X"}
-iterations = 7
+iterations = 6
 angle = 60
 
 # Sierpiński curve
 title = "Sierpiński curve"
 axiom = "F+XF+F+XF"
 rules = {"X":"XF-F+F-XF+F+XF-F+F-X"}
-iterations = 4
+iterations = 3
 angle = 90
 
 # Siepiński sieve
 title = "Siepiński sieve"
 axiom = "FXF--FF--FF"
 rules = {"F":"FF", "X":"--FXF++FXF++FXF--"}
-iterations = 8
+iterations = 4
 angle = 60
 
+main(iterations, axiom, angle, length=8, y_offset=0, x_offset=-300, offset_angle=-90)
