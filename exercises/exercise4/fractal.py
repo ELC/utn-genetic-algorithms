@@ -1,14 +1,14 @@
 import turtle
 import colorsys
 
-def create_l_system(numIters, axiom):
-    startString = axiom
-    endString = ""
+def create_l_system(numIters, axiom, rules):
+    start_string = axiom
+    end_string = ""
     for _ in range(numIters):
-        endString = "".join(rules[i] if i in rules else i for i in startString)
-        startString = endString
+        end_string = "".join(rules[i] if i in rules else i for i in start_string)
+        start_string = end_string
 
-    return endString
+    return end_string
 
 
 def draw_l_system(aTurtle, instructions, angle, distance, color):
@@ -28,8 +28,42 @@ def draw_l_system(aTurtle, instructions, angle, distance, color):
         elif cmd == '-':
             aTurtle.left(angle)
 
-def main(iterations, axiom, angle, length, y_offset=0, x_offset=0, offset_angle=0, color=False):
-    inst = create_l_system(iterations, axiom)
+def draw_background(t):
+    """ Draw a background rectangle. """
+    ts = t.getscreen()
+    canvas = ts.getcanvas()
+    height = ts.getcanvas()._canvas.winfo_height()
+    width = ts.getcanvas()._canvas.winfo_width()
+
+    turtleheading = t.heading()
+    turtlespeed = t.speed()
+    penposn = t.position()
+    penstate = t.pen()
+
+    t.penup()
+    t.speed(0)  # fastest
+    t.goto(-width/2-2, -height/2+3)
+    t.fillcolor(turtle.Screen().bgcolor())
+    t.begin_fill()
+    t.setheading(0)
+    t.forward(width)
+    t.setheading(90)
+    t.forward(height)
+    t.setheading(180)
+    t.forward(width)
+    t.setheading(270)
+    t.forward(height)
+    t.end_fill()
+
+    t.penup()
+    t.setposition(*penposn)
+    t.pen(penstate)
+    t.setheading(turtleheading)
+    t.speed(turtlespeed)
+
+
+def main(iterations, axiom, rules, angle, length, y_offset=0, x_offset=0, offset_angle=0, color=False, filename=None):
+    inst = create_l_system(iterations, axiom, rules)
 
     t = turtle.Turtle()
     wn = turtle.Screen()
@@ -38,16 +72,24 @@ def main(iterations, axiom, angle, length, y_offset=0, x_offset=0, offset_angle=
     if color:
         wn.bgcolor('black')
 
+    if not filename is None:
+        draw_background(t)
+
     t.up()    
     t.backward(-x_offset)
-    t.right(270)
+    t.left(90)
     t.backward(-y_offset)
     t.left(offset_angle)
     t.down()
     t.speed(0)
+    t.pensize(2)
     draw_l_system(t, inst, angle, length, color)
     t.hideturtle()
     
+    if not filename is None:
+        cv = wn.getcanvas()
+        cv.postscript(file=f"{filename}.ps", colormode='color')
+
     wn.exitonclick()
 
 
@@ -135,4 +177,4 @@ rules = {"F":"FF", "X":"--FXF++FXF++FXF--"}
 iterations = 4
 angle = 60
 
-main(iterations, axiom, angle, length=8, y_offset=0, x_offset=-300, offset_angle=-90)
+main(iterations, axiom, rules, angle, length=8, y_offset=0, x_offset=-300, offset_angle=-90, color=True, filename='test')
