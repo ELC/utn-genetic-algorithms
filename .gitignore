@@ -28,6 +28,9 @@ __pycache__
 .coverage
 src
 
+*.gif
+*.ps
+*.png
 *.swp
 *.map
 .idea/
