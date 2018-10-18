@@ -3,6 +3,9 @@ import colorsys
 import os
 from math import cos, sin, radians
 
+import svgwrite
+from svg_turtle import SvgTurtle
+
 def create_l_system(iters, axiom, rules):
     start_string = axiom
     if iters == 0:
@@ -15,7 +18,7 @@ def create_l_system(iters, axiom, rules):
     return end_string
 
 
-def draw_l_system(aTurtle, wn, instructions, angle, distance, color):
+def draw_l_system(t, instructions, angle, distance, color):
     steps = len([i for i in instructions if i in "FB"])
     step = 1 / steps
     i = 0
@@ -23,15 +26,15 @@ def draw_l_system(aTurtle, wn, instructions, angle, distance, color):
         if cmd in "FB" and color:
             r, g, b = colorsys.hsv_to_rgb(i, 1.0, 1.0)
             i += step
-            aTurtle.color(r, g, b)
+            t.color(r, g, b)
         if cmd == 'F':
-            aTurtle.forward(distance)
+            t.forward(distance)
         elif cmd == 'B':
-            aTurtle.backward(distance)
+            t.backward(distance)
         elif cmd == '+':
-            aTurtle.right(angle)
+            t.right(angle)
         elif cmd == '-':
-            aTurtle.left(angle)
+            t.left(angle)
 
 def draw_background(t):
     """ Draw a background rectangle. """
@@ -97,9 +100,47 @@ def calc_length_height(instructions, angle, correction_angle):
 
     return width, height, abs(min_x), abs(min_y)
 
-def main(iterations, axiom, rules, angle, length=None, size=None, correction_angle=0,
+
+def save_svg(inst, angle, length, color, filename, iterations,
+             width, height, x_offset, y_offset, offset_angle, size):
+
+    drawing = svgwrite.Drawing(f"{filename}/{filename}_{iterations}.svg", size=(f"{width}px", f"{height}px"))
+    drawing.add(drawing.rect(fill='black', size=("100%", "100%")))
+    t = SvgTurtle(drawing)
+    turtle.Turtle._screen = t.screen
+    turtle.Turtle._pen = t
+
+    t.up()    
+    t.backward(-x_offset)
+    t.left(90)
+    t.backward(-y_offset)
+    t.left(offset_angle)
+    t.down()
+    t.speed(0)
+    t.pensize(size)
+
+    draw_l_system(t, inst, angle, length, color)
+
+    t.hideturtle()
+
+    drawing.save()
+    
+def save_ps(t, filename, width, height, iterations):
+
+    cv = t.getscreen().getcanvas()
+    cv.postscript(file=f"{filename}/{filename}_{iterations}.ps", colormode='color')
+
+    try: # Needs Image Magick Convert and GhostScript
+        command = f"convert -density 1000 -resize {int(width+0.5)}x{int(height+0.5)} -flatten -background black -units pixelsperinch {filename}/{filename}_{iterations}.ps {filename}/{filename}_{iterations}.png"
+        print(command)
+        os.system(command)
+    except:
+        pass
+    
+
+def main(iterations, axiom, rules, angle, length=None, color=True, size=None, correction_angle=0,
         y_offset=None, x_offset=None, offset_angle=None, inverted=False, flip_h=False, flip_v=False,
-        color=False, filename=None, width=None, height=None, margin=None, aspect_ratio=None):
+        filename=None, width=None, height=None, margin=None, aspect_ratio=None, fast=False):
 
     inst = create_l_system(iterations, axiom, rules)
 
@@ -146,7 +187,6 @@ def main(iterations, axiom, rules, angle, length=None, size=None, correction_ang
         else:
             y_offset = -(height / 2) + (height - height_ * length) / 2 + min_y * length
 
-
     if inverted:
         inst = inst.replace('+', '$')
         inst = inst.replace('-', '+')
@@ -159,23 +199,38 @@ def main(iterations, axiom, rules, angle, length=None, size=None, correction_ang
         inst = inst.replace('F', '$')
         inst = inst.replace('B', 'F')
         inst = inst.replace('$', 'B')
-        y_offset = -y_offset
+        y_offset = - y_offset
 
     if flip_v:
         inst = inst.replace('+', '$')
         inst = inst.replace('-', '+')
         inst = inst.replace('$', '-')
-        y_offset = -y_offset
+        y_offset = - y_offset
 
     print(f"Width: {width_} - Height:{height_ }")
 
     print(length)
+    print(x_offset, y_offset)
 
     if size is None:
-        if length < 2:
+        if length < 3:
             size = 1
-        else:
+        elif length < 12:
             size = 2
+        elif length < 25:
+            size = 3
+        else:            
+            size = 5
+    
+    if not filename is None:
+        filename = filename.lower().replace(" ","-")
+        if not os.path.exists(filename):
+            os.makedirs(filename)
+
+    if fast:
+        save_svg(inst, angle, length, color, filename, iterations,
+             width, height, x_offset, y_offset, offset_angle, size)
+        return
 
     t = turtle.Turtle()
     wn = turtle.Screen()
@@ -185,7 +240,7 @@ def main(iterations, axiom, rules, angle, length=None, size=None, correction_ang
         wn.bgcolor('black')
 
     if not filename is None:
-        draw_background(t)        
+        draw_background(t)
 
     t.up()    
     t.backward(-x_offset)
@@ -195,81 +250,126 @@ def main(iterations, axiom, rules, angle, length=None, size=None, correction_ang
     t.down()
     t.speed(0)
     t.pensize(size)
-    draw_l_system(t, wn, inst, angle, length, color)
+    draw_l_system(t, inst, angle, length, color)
     t.hideturtle()
     
     if not filename is None:
-        if not os.path.exists(filename):
-            os.makedirs(filename)
-        cv = wn.getcanvas()
-        cv.postscript(file=f"{filename}\{filename}_{iterations}.ps", colormode='color')
-        try: # Needs Image Magick Convert
-            command = f"convert -density 1000 -resize {width}x{height} -flatten -background black -units pixelsperinch {filename}\{filename}_{iterations}.ps {filename}\{filename}_{iterations}.png"
-            print(command)
-            os.system(command)
-        except:
-            pass
-        
-    wn.exitonclick()
 
+        save_ps(t, filename, width, height, iterations)
+
+    wn.exitonclick()
 
 # 32-segment curve
 title = "32-segment curve"
 axiom = "F+F+F+F"
 rules = {"F":"-F+F-F-F+F+FF-F+F+FF+F-F-FF+FF-FF+F+F-FF-F-F+FF-F-F+F+F-F+"}
-iterations = 1
+iterations = 4 # TOP: 3
 angle = 90
 width = 500
 
-# main(iterations, axiom, rules, angle, color=True, width=width) # ,  filename=title.replace(" ","-"))
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, height=width, filename=title)
 
 # box fractal
 title = "box fractal"
 axiom = "F-F-F-F"
 rules = {"F":"F-F+F+F-F"}
-iterations = 2
+iterations = 4 # TOP: 6
 angle = 90
 width = 450
 
-# main(iterations, axiom, rules, angle, color=True, width=width) # ,  filename=title.replace(" ","-"))
+# main(4, axiom, rules, angle, aspect_ratio=1, width=width,) # filename=title, fast=True)
 
 # Dragon curve
-title = "Dragon curve"
+title = "Dragon curve center"
 axiom = "FX"
 rules = {"X":"X+YF+", "Y":"-FX-Y"}
-iterations = 0
+iterations = 8 # TOP: 16
 angle = 90
 width = 500
+offset_angle = -90 + 45 * iterations
+correction_angle = 45 * iterations
 
-# main(iterations, axiom, rules, angle, color=True, width=width) # ,  filename=title.replace(" ","-"))
+# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+#         width=width, height=width, filename=title, fast=True) 
 
-# 2 2 4 4 8 10 18 20 36 42 74 84 148
+# Dragon curve 
+title = "TwinDragon curve center"
+axiom = "FX+FX"
+rules = {"X":"X+YF+", "Y":"-FX-Y"}
+iterations = 6 # TOP: 16
+angle = 90
+width = 500
+offset_angle = -90 + 45 * iterations
+correction_angle = 45 * iterations
+
+# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+#         width=width, height=width, filename=title, fast=True) 
+
+# Dragon curve
+title = "ThreeDragon curve center"
+axiom = "FX+FX+FX"
+rules = {"X":"X+YF+", "Y":"-FX-Y"}
+iterations = 7 # TOP: 15
+angle = 90
+width = 500
+offset_angle = -90 + 45 * iterations
+correction_angle = 45 * iterations
+
+# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+#     width=width, height=width, filename=title, fast=True) 
+
+
+# TerDragon curve center
+title = "TerDragon curve center"
+axiom = "F"
+rules = {"F":"F-F+F"}
+iterations = 5 # TOP: 10
+angle = 120
+width = 500
+offset_angle = 90 - 30 * iterations
+correction_angle = 180 - 30 * iterations
+
+
+# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+#     width=width, height=width, filename=title, fast=True) 
+
+
+# Lévy C curve
+title = "Lévy C curve"
+axiom = "F"
+rules = {"F":"+F--F+"}
+iterations = 10 # TOP: 16
+angle = 45
+width = 500
+
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, height=width,  filename=title)
+
 
 # Hilbert curve
 title = "Hilbert curve"
 axiom = "L"
 rules = {"L":"+RF-LFL-FR+", "R":"-LF+RFR+FL-"}
-iterations = 3
+iterations = 8 # TOP: 9
 angle = 90
 width = 450
 y_offset = -190
 angle_offset = 90
 
-# main(iterations, axiom, rules, angle, color=True, width=width, inverted=True,
-#         offset_angle=angle_offset, y_offset=y_offset) # ,  filename=title.replace(" ","-"))
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, inverted=True,
+#     offset_angle=angle_offset, y_offset=y_offset, filename=title)
 
 # Hilbert curve II
 title = "Hilbert curve II"
 axiom = "X"
 rules = {"X":"XFYFX+F+YFXFY-F-XFYFX", "Y":"YFXFY-F-XFYFX+F+YFXFY"}
-iterations = 4
+iterations = 4 # TOP: 6
 angle = 90
 width = 450
 y_offset = -190
 angle_offset = 0
 
-# main(iterations, axiom, rules, angle, color=True, width=width, 
-#           offset_angle=angle_offset, y_offset=y_offset) # ,  filename=title.replace(" ","-"))
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, 
+#     offset_angle=angle_offset, y_offset=y_offset, filename=title)
 
 
 # 2 8 26 80 242 728
@@ -278,11 +378,11 @@ angle_offset = 0
 title = "Koch snowflake"
 axiom = "F--F--F"
 rules = {"F":"F+F--F+F"}
-iterations = 0
+iterations = 4 # TOP: 7
 angle = 60
 width = 450
 
-# main(iterations, axiom, rules, angle, color=True, width=width) # ,  filename=title.replace(" ","-"))
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
 
 # 1 3 9 27 81 243 729
 
@@ -290,82 +390,217 @@ width = 450
 title = "Peano curve"
 axiom = "F"
 rules = {"F":"F+F-F-F-F+F+F+F-F"}
-iterations = 2
+iterations = 2 # TOP: 5
 angle = 90
 width = 450
 
-# main(iterations, axiom, rules, angle, color=True, width=width) # ,  filename=title.replace(" ","-"))
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
 
 # 1 3 9 27 81 243 729
 
 # Peano-Gosper curve
-title = "Peano-Gosper curve"
+title = "Peano-Gosper curve center"
 axiom = "FX"
 rules = {"X":"X+YF++YF-FX--FXFX-YF+", "Y":"-FX+YFYF++YF+FX--FX-Y"}
-iterations = 4
+iterations = 4 # TOP: 6
 angle = 60
 width = 450
+offset_angle = -90 + 15 * iterations
+correction_angle = 15 * iterations
 
-# main(iterations, axiom, rules, angle, color=True, width=width) # ,  filename=title.replace(" ","-"))
+# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+#     aspect_ratio=1, fast=True, width=width, filename=title)
 
 # ? 2.5 7 20 55 150
 
 # quadratic Koch island
-title = "quadratic Koch island"
+title = "quadratic Koch island center"
 axiom = "F+F+F+F"
 rules = {"F":"F-F+F+FFF-F-F+F"}
-iterations = 2
+iterations = 2 # TOP: 4
 angle = 90
 width = 450
-height = 450
-x_offset = -65
-y_offset = 145
-angle_offset = -90+20
+offset_angle = -105 + 15 * iterations
+correction_angle = -15 + 15 * iterations
 
-# main(iterations, axiom, rules, angle, color=True, width=width) # ,  filename=title.replace(" ","-"))
+# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+#     aspect_ratio=1, fast=True, width=width, filename=title)
 
 # 1 7 31 127
 
-# Sierpiński arrowhead
+# Sierpiński arrowhead 
 title = "Sierpiński arrowhead"
 axiom = "YF"
 rules = {"X":"YF+XF+Y", "Y":"XF-YF-X"}
-iterations = 1
+iterations = 1 # TOP: 10
 angle = 60
 width = 450
-aspect_ratio = 9 / 8
-margin = 35
-length = (width - 2 * margin) / 2**(iterations+1)
-y_offset = -150
-x_offset = 190
-angle_offset = 90
+flip_v = True
 correction_angle = 0 if iterations % 2 == 0 else -60
 offset_angle = -90 if iterations % 2 == 0 else -30
-flip_v = iterations % 2 == 0
-
-# main(iterations, axiom, rules, angle, flip_v=True, 
-#         correction_angle=correction_angle, offset_angle=offset_angle, color=True, width=width, height=width) # ,  filename=title.replace(" ","-"))
+    
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, flip_v=True, 
+#     correction_angle=correction_angle, offset_angle=offset_angle, width=width, height=width, filename=title)
 
 # Sierpiński curve
 title = "Sierpiński curve"
 axiom = "F+XF+F+XF"
 rules = {"X":"XF-F+F-XF+F+XF-F+F-X"}
-iterations = 4
+iterations = 4 # TOP: 8
 angle = 90
 width = 450
 
-# main(iterations, axiom, rules, angle, color=True, width=width) # ,  filename=title.replace(" ","-"))
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
 
 # Siepiński sieve
 title = "Siepiński sieve"
 axiom = "FXF--FF--FF"
 rules = {"F":"FF", "X":"--FXF++FXF++FXF--"}
-iterations = 2
+iterations = 7 # TOP: 8
 angle = 60
 width = 450
+
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+
+# Quadratic Snowflake
+title = "Quadratic Snowflake"
+axiom = "F--F"
+rules = {"F":"F-F+F+F-F"}
+iterations = 4 # TOP: 6
+angle = 90
+width = 600
+angle_offset = -90
+
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, height=width, filename=title)
+
+# Board
+title = "Board"
+axiom = "F+F+F+F"
+rules = {"F":"FF+F+F+F+FF"}
+iterations = 3 # TOP: 5
+angle = 90
+width = 600
+
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+
+# Cross
+title = "Cross center"
+axiom = "F+F+F+F"
+rules = {"F":"F+FF++F+F"}
+iterations = 3 # TOP: 6
+angle = 90
+width = 600
+offset_angle = -120 + 30 * iterations
+correction_angle = -30 + 30 * iterations
+
+# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+#     aspect_ratio=1, fast=True, width=width, filename=title)
+
+
+# Cross 2 
+title = "Cross 2"
+axiom = "F+F+F+F"
+rules = {"F":"F+F-F+F+F"}
+iterations = 3 # TOP: 6
+angle = 90
+width = 600
+
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+
+# Pentaplexity
+title = "Pentaplexity"
+axiom = "F++F++F++F++F"
+rules = {"F":"F++F++F+++++F-F++F"}
+iterations = 1 # TOP: 5
+angle = 36
+width = 600
+
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+
+# Tiles 
+title = "Tiles"
+axiom = "F+F+F+F"
+rules = {"F":"FF+F-F+F+FF"}
+iterations = 3 # TOP: 4
+angle = 90
+width = 600
+
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+
+# Rings
+title = "Rings"
+axiom = "F+F+F+F"
+rules = {"F":"FF+F+F+F+F+F-F"}
+iterations = 2 # TOP: 4
+angle = 90
+width = 600
+# offset_angle = -90 + 15 * iterations
+# correction_angle = 15 * iterations
+
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+
+# Krishna Anklets
+title = "Krishna Anklets"
+axiom = " -X--X"
+rules = {"X":"XFX--XFX"}
+iterations = 3 # TOP: 9
+angle = 45
+width = 600
+
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+
+# Triangle TODO
+title = "Triangle center"
+axiom = "F+F+F"
+rules = {"F":"F-F+F"}
+iterations = 2 # TOP: 9
+angle = 120
+width = 600
+offset_angle = -90 - 30 * iterations
+correction_angle = -30 * iterations
+
+# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+#     aspect_ratio=1, fast=True, width=width, filename=title)
+
+# Quadratic Gosper
+title = "Quadratic Gosper"
+axiom = "YF"
+rules = {"X": "XFX-YF-YF+FX+FX-YF-YFFX+YF+FXFXYF-FX+YF+FXFX+YF-FXYF-YF-FX+FX+YFYF-", 
+         "Y": "+FXFX-YF-YF+FX+FXYF+FX-YFYF-FX-YF+FXYFYF-FX-YFFX+FX+YF-YF-FX+FX+YFY"}
+iterations = 2 # TOP: 3
+angle = 90
+width = 600
+
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+
+# Crystal
+title = "Crystal"
+axiom = "F+F+F+F"
+rules = {"F":"FF+F++F+F"}
+iterations = 3 # TOP: 6
+angle = 90
+width = 600
 aspect_ratio = 8 / 9
 margin = 35
 length = (width - 2 * margin) / 2 ** (iterations + 1 )
 angle_offset = -90
 
-# main(iterations, axiom, rules, angle, color=True, width=width) # ,  filename=title.replace(" ","-"))
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+
+# Moore Curve
+title = "Moore Curve"
+axiom = "LFL-F-LFL"
+rules = {"L":"+RF-LFL-FR+", "R":"-LF+RFR+FL-"}
+iterations = 0 # TOP: 8
+angle = 90
+width = 450
+margin = 35
+y_offset = 190
+angle_offset = 0
+# Original: -width / 2 + margin + (width - 2 * margin) / (2**(iterations+1) - 1) * (2**(iterations) - 1)
+x_offset = - (width - 2 * margin) / (2 * (2 ** (iterations + 1) - 1))
+if iterations == 0:
+    x_offset = -190
+
+# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True,
+#     offset_angle=angle_offset, y_offset=y_offset, x_offset=x_offset, filename=title)

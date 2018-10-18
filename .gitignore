@@ -28,6 +28,7 @@ __pycache__
 .coverage
 src
 
+*.svg
 *.gif
 *.ps
 *.png
