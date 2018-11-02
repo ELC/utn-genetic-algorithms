@@ -104,7 +104,7 @@ def calc_length_height(instructions, angle, correction_angle):
 def save_svg(inst, angle, length, color, filename, iterations,
              width, height, x_offset, y_offset, offset_angle, size):
 
-    drawing = svgwrite.Drawing(f"{filename}/{filename}_{iterations}.svg", size=(f"{width}px", f"{height}px"))
+    drawing = svgwrite.Drawing(f"{filename}/{filename}_{str(iterations).zfill(2)}.svg", size=(f"{width}px", f"{height}px"))
     drawing.add(drawing.rect(fill='black', size=("100%", "100%")))
     t = SvgTurtle(drawing)
     turtle.Turtle._screen = t.screen
@@ -144,7 +144,10 @@ def main(iterations, axiom, rules, angle, length=None, color=True, size=None, co
 
     inst = create_l_system(iterations, axiom, rules)
 
-    width_, height_, min_x, min_y = calc_length_height(inst, angle, correction_angle)    
+    width_, height_, min_x, min_y = calc_length_height(inst, angle, correction_angle)
+
+    if width_ == 0 and height_ == 0:
+        return
 
     if aspect_ratio is None:
         if 0 in [width_, height_]:
@@ -259,15 +262,34 @@ def main(iterations, axiom, rules, angle, length=None, color=True, size=None, co
 
     wn.exitonclick()
 
+def create_gifs(filename, width):
+    command = f"cd {filename} && convert -loop 0 -delay 6 -morph 15 *.svg {filename}_{width}x{width}_15fps.gif"
+    print(command)
+    os.system(command)
+    # command = f"cd {filename} && convert -loop 0 -delay 3 -morph 30 *.svg {filename}_{width}x{width}_30fps.gif"
+    # print(command)
+    # os.system(command)
+    # command = f"cd {filename} && convert -loop 0 -delay 2 -morph 60 *.svg {filename}_{width}x{width}_60fps.gif"
+    # print(command)
+    # os.system(command)
+
+
+# Global parameters
+
+width = 320
+
 # 32-segment curve
 title = "32-segment curve"
 axiom = "F+F+F+F"
 rules = {"F":"-F+F-F-F+F+FF-F+F+FF+F-F-FF+FF-FF+F+F-FF-F-F+FF-F-F+F+F-F+"}
 iterations = 4 # TOP: 3
 angle = 90
-width = 500
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, height=width, filename=title)
+for iterations in range( 3 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width) 
 
 # box fractal
 title = "box fractal"
@@ -275,9 +297,12 @@ axiom = "F-F-F-F"
 rules = {"F":"F-F+F+F-F"}
 iterations = 4 # TOP: 6
 angle = 90
-width = 450
 
-# main(4, axiom, rules, angle, aspect_ratio=1, width=width,) # filename=title, fast=True)
+for iterations in range( 6 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, width=width, filename=title, fast=True)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Dragon curve
 title = "Dragon curve center"
@@ -285,12 +310,16 @@ axiom = "FX"
 rules = {"X":"X+YF+", "Y":"-FX-Y"}
 iterations = 8 # TOP: 16
 angle = 90
-width = 500
-offset_angle = -90 + 45 * iterations
-correction_angle = 45 * iterations
 
-# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
-#         width=width, height=width, filename=title, fast=True) 
+for iterations in range(16 + 1):
+    offset_angle = -90 + 45 * iterations
+    correction_angle = 45 * iterations
+
+    main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+            width=width, height=width, filename=title, fast=True) 
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Dragon curve 
 title = "TwinDragon curve center"
@@ -298,12 +327,16 @@ axiom = "FX+FX"
 rules = {"X":"X+YF+", "Y":"-FX-Y"}
 iterations = 6 # TOP: 16
 angle = 90
-width = 500
-offset_angle = -90 + 45 * iterations
-correction_angle = 45 * iterations
 
-# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
-#         width=width, height=width, filename=title, fast=True) 
+for iterations in range(16 + 1):
+    offset_angle = -90 + 45 * iterations
+    correction_angle = 45 * iterations
+
+    main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+            width=width, height=width, filename=title, fast=True) 
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Dragon curve
 title = "ThreeDragon curve center"
@@ -311,13 +344,16 @@ axiom = "FX+FX+FX"
 rules = {"X":"X+YF+", "Y":"-FX-Y"}
 iterations = 7 # TOP: 15
 angle = 90
-width = 500
-offset_angle = -90 + 45 * iterations
-correction_angle = 45 * iterations
 
-# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
-#     width=width, height=width, filename=title, fast=True) 
+for iterations in range(15 + 1):
+    offset_angle = -90 + 45 * iterations
+    correction_angle = 45 * iterations
 
+    main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+        width=width, height=width, filename=title, fast=True) 
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # TerDragon curve center
 title = "TerDragon curve center"
@@ -325,14 +361,17 @@ axiom = "F"
 rules = {"F":"F-F+F"}
 iterations = 5 # TOP: 10
 angle = 120
-width = 500
-offset_angle = 90 - 30 * iterations
-correction_angle = 180 - 30 * iterations
+
+for iterations in range(10 + 1):
+    offset_angle = 90 - 30 * iterations
+    correction_angle = 180 - 30 * iterations
 
 
-# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
-#     width=width, height=width, filename=title, fast=True) 
+    main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+        width=width, height=width, filename=title, fast=True) 
 
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Lévy C curve
 title = "Lévy C curve"
@@ -340,10 +379,12 @@ axiom = "F"
 rules = {"F":"+F--F+"}
 iterations = 10 # TOP: 16
 angle = 45
-width = 500
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, height=width,  filename=title)
+for iterations in range(16 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, height=width,  filename=title)
 
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Hilbert curve
 title = "Hilbert curve"
@@ -351,12 +392,15 @@ axiom = "L"
 rules = {"L":"+RF-LFL-FR+", "R":"-LF+RFR+FL-"}
 iterations = 8 # TOP: 9
 angle = 90
-width = 450
 y_offset = -190
 angle_offset = 90
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, inverted=True,
-#     offset_angle=angle_offset, y_offset=y_offset, filename=title)
+for iterations in range( 9 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, inverted=True,
+        offset_angle=angle_offset, y_offset=y_offset, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)        
 
 # Hilbert curve II
 title = "Hilbert curve II"
@@ -364,13 +408,15 @@ axiom = "X"
 rules = {"X":"XFYFX+F+YFXFY-F-XFYFX", "Y":"YFXFY-F-XFYFX+F+YFXFY"}
 iterations = 4 # TOP: 6
 angle = 90
-width = 450
 y_offset = -190
 angle_offset = 0
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, 
-#     offset_angle=angle_offset, y_offset=y_offset, filename=title)
+for iterations in range( 6 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, 
+        offset_angle=angle_offset, y_offset=y_offset, filename=title)
 
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # 2 8 26 80 242 728
 
@@ -380,9 +426,12 @@ axiom = "F--F--F"
 rules = {"F":"F+F--F+F"}
 iterations = 4 # TOP: 7
 angle = 60
-width = 450
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+for iterations in range( 7 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # 1 3 9 27 81 243 729
 
@@ -392,9 +441,12 @@ axiom = "F"
 rules = {"F":"F+F-F-F-F+F+F+F-F"}
 iterations = 2 # TOP: 5
 angle = 90
-width = 450
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+for iterations in range( 5 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # 1 3 9 27 81 243 729
 
@@ -404,12 +456,16 @@ axiom = "FX"
 rules = {"X":"X+YF++YF-FX--FXFX-YF+", "Y":"-FX+YFYF++YF+FX--FX-Y"}
 iterations = 4 # TOP: 6
 angle = 60
-width = 450
-offset_angle = -90 + 15 * iterations
-correction_angle = 15 * iterations
 
-# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
-#     aspect_ratio=1, fast=True, width=width, filename=title)
+for iterations in range( 6 + 1):
+    offset_angle = -90 + 15 * iterations
+    correction_angle = 15 * iterations
+
+    main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+        aspect_ratio=1, fast=True, width=width, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # ? 2.5 7 20 55 150
 
@@ -419,12 +475,16 @@ axiom = "F+F+F+F"
 rules = {"F":"F-F+F+FFF-F-F+F"}
 iterations = 2 # TOP: 4
 angle = 90
-width = 450
-offset_angle = -105 + 15 * iterations
-correction_angle = -15 + 15 * iterations
 
-# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
-#     aspect_ratio=1, fast=True, width=width, filename=title)
+for iterations in range( 4 + 1):
+    offset_angle = -105 + 15 * iterations
+    correction_angle = -15 + 15 * iterations
+
+    main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+        aspect_ratio=1, fast=True, width=width, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # 1 7 31 127
 
@@ -434,13 +494,17 @@ axiom = "YF"
 rules = {"X":"YF+XF+Y", "Y":"XF-YF-X"}
 iterations = 1 # TOP: 10
 angle = 60
-width = 450
-flip_v = True
-correction_angle = 0 if iterations % 2 == 0 else -60
-offset_angle = -90 if iterations % 2 == 0 else -30
-    
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, flip_v=True, 
-#     correction_angle=correction_angle, offset_angle=offset_angle, width=width, height=width, filename=title)
+
+for iterations in range(10 + 1):
+    flip_v = True
+    correction_angle = 0 if iterations % 2 == 0 else -60
+    offset_angle = -90 if iterations % 2 == 0 else -30
+        
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, flip_v=True, 
+        correction_angle=correction_angle, offset_angle=offset_angle, width=width, height=width, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Sierpiński curve
 title = "Sierpiński curve"
@@ -448,9 +512,12 @@ axiom = "F+XF+F+XF"
 rules = {"X":"XF-F+F-XF+F+XF-F+F-X"}
 iterations = 4 # TOP: 8
 angle = 90
-width = 450
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+for iterations in range( 8 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Siepiński sieve
 title = "Siepiński sieve"
@@ -458,9 +525,12 @@ axiom = "FXF--FF--FF"
 rules = {"F":"FF", "X":"--FXF++FXF++FXF--"}
 iterations = 7 # TOP: 8
 angle = 60
-width = 450
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+for iterations in range( 8 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Quadratic Snowflake
 title = "Quadratic Snowflake"
@@ -468,10 +538,13 @@ axiom = "F--F"
 rules = {"F":"F-F+F+F-F"}
 iterations = 4 # TOP: 6
 angle = 90
-width = 600
 angle_offset = -90
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, height=width, filename=title)
+for iterations in range( 6 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, height=width, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Board
 title = "Board"
@@ -479,9 +552,12 @@ axiom = "F+F+F+F"
 rules = {"F":"FF+F+F+F+FF"}
 iterations = 3 # TOP: 5
 angle = 90
-width = 600
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+for iterations in range( 5 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Cross
 title = "Cross center"
@@ -489,13 +565,16 @@ axiom = "F+F+F+F"
 rules = {"F":"F+FF++F+F"}
 iterations = 3 # TOP: 6
 angle = 90
-width = 600
-offset_angle = -120 + 30 * iterations
-correction_angle = -30 + 30 * iterations
 
-# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
-#     aspect_ratio=1, fast=True, width=width, filename=title)
+for iterations in range( 6 + 1):
+    offset_angle = -120 + 30 * iterations
+    correction_angle = -30 + 30 * iterations
 
+    main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+        aspect_ratio=1, fast=True, width=width, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Cross 2 
 title = "Cross 2"
@@ -503,9 +582,12 @@ axiom = "F+F+F+F"
 rules = {"F":"F+F-F+F+F"}
 iterations = 3 # TOP: 6
 angle = 90
-width = 600
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+for iterations in range( 6 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Pentaplexity
 title = "Pentaplexity"
@@ -513,9 +595,12 @@ axiom = "F++F++F++F++F"
 rules = {"F":"F++F++F+++++F-F++F"}
 iterations = 1 # TOP: 5
 angle = 36
-width = 600
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+for iterations in range( 5 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Tiles 
 title = "Tiles"
@@ -523,9 +608,12 @@ axiom = "F+F+F+F"
 rules = {"F":"FF+F-F+F+FF"}
 iterations = 3 # TOP: 4
 angle = 90
-width = 600
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+for iterations in range( 4 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Rings
 title = "Rings"
@@ -533,11 +621,15 @@ axiom = "F+F+F+F"
 rules = {"F":"FF+F+F+F+F+F-F"}
 iterations = 2 # TOP: 4
 angle = 90
-width = 600
-# offset_angle = -90 + 15 * iterations
-# correction_angle = 15 * iterations
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+for iterations in range( 4 + 1):
+    offset_angle = -90 + 15 * iterations
+    correction_angle = 15 * iterations
+
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Krishna Anklets
 title = "Krishna Anklets"
@@ -545,9 +637,12 @@ axiom = " -X--X"
 rules = {"X":"XFX--XFX"}
 iterations = 3 # TOP: 9
 angle = 45
-width = 600
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+for iterations in range( 9 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Triangle TODO
 title = "Triangle center"
@@ -555,12 +650,16 @@ axiom = "F+F+F"
 rules = {"F":"F-F+F"}
 iterations = 2 # TOP: 9
 angle = 120
-width = 600
-offset_angle = -90 - 30 * iterations
-correction_angle = -30 * iterations
 
-# main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
-#     aspect_ratio=1, fast=True, width=width, filename=title)
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
+
+for iterations in range( 9 + 1):
+    offset_angle = -90 - 30 * iterations
+    correction_angle = -30 * iterations
+
+    main(iterations, axiom, rules, angle, correction_angle=correction_angle, offset_angle=offset_angle, 
+        aspect_ratio=1, fast=True, width=width, filename=title)
 
 # Quadratic Gosper
 title = "Quadratic Gosper"
@@ -569,9 +668,12 @@ rules = {"X": "XFX-YF-YF+FX+FX-YF-YFFX+YF+FXFXYF-FX+YF+FXFX+YF-FXYF-YF-FX+FX+YFY
          "Y": "+FXFX-YF-YF+FX+FXYF+FX-YFYF-FX-YF+FXYFYF-FX-YFFX+FX+YF-YF-FX+FX+YFY"}
 iterations = 2 # TOP: 3
 angle = 90
-width = 600
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+for iterations in range( 3 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Crystal
 title = "Crystal"
@@ -579,13 +681,12 @@ axiom = "F+F+F+F"
 rules = {"F":"FF+F++F+F"}
 iterations = 3 # TOP: 6
 angle = 90
-width = 600
-aspect_ratio = 8 / 9
-margin = 35
-length = (width - 2 * margin) / 2 ** (iterations + 1 )
-angle_offset = -90
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+for iterations in range( 6 + 1):
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True, filename=title)
+
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)
 
 # Moore Curve
 title = "Moore Curve"
@@ -593,14 +694,18 @@ axiom = "LFL-F-LFL"
 rules = {"L":"+RF-LFL-FR+", "R":"-LF+RFR+FL-"}
 iterations = 0 # TOP: 8
 angle = 90
-width = 450
-margin = 35
 y_offset = 190
 angle_offset = 0
-# Original: -width / 2 + margin + (width - 2 * margin) / (2**(iterations+1) - 1) * (2**(iterations) - 1)
-x_offset = - (width - 2 * margin) / (2 * (2 ** (iterations + 1) - 1))
-if iterations == 0:
-    x_offset = -190
+margin = 35
 
-# main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True,
-#     offset_angle=angle_offset, y_offset=y_offset, x_offset=x_offset, filename=title)
+for iterations in range( 8 + 1):
+    # Original: -width / 2 + margin + (width - 2 * margin) / (2**(iterations+1) - 1) * (2**(iterations) - 1)
+    x_offset = - (width - 2 * margin) / (2 * (2 ** (iterations + 1) - 1))
+    if iterations == 0:
+        x_offset = -190
+
+    main(iterations, axiom, rules, angle, aspect_ratio=1, fast=True, width=width, flip_v=True,
+        offset_angle=angle_offset, y_offset=y_offset, x_offset=x_offset, filename=title)
+    
+filename = title.lower().replace(" ","-")
+create_gifs(filename, width)   
