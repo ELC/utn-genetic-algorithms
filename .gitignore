@@ -45,3 +45,4 @@ config.rst
 !.vscode/launch.json
 !.vscode/extensions.json
 .vscode
+*.mp4
