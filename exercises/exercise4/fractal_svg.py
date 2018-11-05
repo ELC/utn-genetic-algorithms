@@ -186,15 +186,20 @@ def create_gifs(filename, width):
         iteration = '00'
     else:
         iteration = '01'
-    command = f'cd {filename} && copy {filename}_{width}x{width}_{iteration}.svg {filename}_{width}x{width}_end.svg'
+    
+    base_filename = f'{filename}_{width}x{width}'
+
+    command = f'cd {filename} && copy {base_filename}_{iteration}.svg {base_filename}_end.svg'
     os.system(command)
-    command = f'cd {filename} && convert -loop 0 -delay 8 -morph 15 *{width}x{width}*.svg -font Arial -pointsize 20 -draw "gravity south fill gray10 text 0,0 \'© Ezequiel Leonardo Castaño\' " {filename}_{width}x{width}_copyright.gif'
+    command = f'cd {filename} && convert -loop 0 -delay 6 -morph 20  *{width}x{width}*.svg -font Arial -pointsize 20 -draw "gravity south fill gray10 text 0,0 \'© Ezequiel Leonardo Castaño\' " {base_filename}.gif'
+    os.system(command)
+    command = f'cd {filename} && ffmpeg -y -i {base_filename}.gif -movflags faststart -profile:v baseline -level 3.0 -pix_fmt yuv420p -an {base_filename}.mp4'
     os.system(command)
 
 
 # Global parameters
 
-width = 300
+width = 600
 
 title = "32-Segment-Curve"
 axiom = "F+F+F+F"
@@ -550,14 +555,16 @@ iterations = 0 # TOP: 8
 angle = 90
 angle_offset = 0
 margin = 35
+y_offset = width/2 - margin
+
 
 for iterations in range( 8 + 1):
     # Original: -width / 2 + margin + (width - 2 * margin) / (2**(iterations+1) - 1) * (2**(iterations) - 1)
     x_offset = - (width - 2 * margin) / (2 * (2 ** (iterations + 1) - 1))
     if iterations == 0:
-        x_offset = -190
+        x_offset = -width/2 + margin
 
     main(iterations, axiom, rules, angle, aspect_ratio=1, width=width, flip_v=True,
-        offset_angle=angle_offset, x_offset=x_offset, filename=title)
+        offset_angle=angle_offset, x_offset=x_offset, y_offset=y_offset, filename=title)
 
 create_gifs(title, width)
