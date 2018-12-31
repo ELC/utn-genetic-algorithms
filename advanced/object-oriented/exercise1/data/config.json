@@ -1,0 +1,1 @@
+{"generations": 10, "cross_over_prob": 0.75, "mutation_prob": 0.05, "population_size": 10, "chromosome_bits": 30, "elitism": false}
