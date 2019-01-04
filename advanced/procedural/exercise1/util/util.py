@@ -74,7 +74,7 @@ def _get_next(array):
     for element in array:
         yield element
 
-def choose_n_elements_from_narray(array, weight):
+def choose_roulette(array, weight):
     return choice(array, p=weight) 
 
 """#####################"""
