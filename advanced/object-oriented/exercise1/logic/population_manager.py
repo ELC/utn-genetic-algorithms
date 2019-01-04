@@ -22,7 +22,6 @@ class PopulationController():
     @classmethod
     def reset_populations(cls):
         cls.results = []
-        Population.reset_generations()
         cls.store_results()
 
     @classmethod
@@ -36,6 +35,10 @@ class PopulationController():
     @classmethod
     def get_averages(cls):
         return [i.get_average() for i in cls.load_populations()]
+
+    @classmethod
+    def get_targets(cls, population):
+        return population.get_targets()
 
     @classmethod
     def get_ranges(cls):

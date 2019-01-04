@@ -6,6 +6,11 @@ def main():
 
     menus["1. Principal"] = {
         "Ejecutar": execute,
+        "Ejecutar 10 veces": lambda: execute_n_times(10),
+        "Ejecutar 30 veces": lambda: execute_n_times(30),
+        "Ejecutar 50 veces": lambda: execute_n_times(50),
+        "Ejecutar 100 veces": lambda: execute_n_times(100),
+        "Ejecutar n veces": execute_times_by_user,
     }
 
     menus["2. Reporte"] = {
@@ -14,8 +19,8 @@ def main():
     }
 
     menus["3. Grafico"] = {
-        "Graficar Maximos, minimos y promedios": graphic_min_max_mean,
-        "Graficar Rango": graphic_range,
+        "Graficar Maximos, minimos y promedios": Report.graphic_min_max_mean,
+        "Graficar Rango": Report.graphic_range,
     }
 
     menus["4. Configuracion"] = {
@@ -86,6 +91,22 @@ def execute():
     full_report()
 
 
+def execute_times_by_user():
+    n = input("Cuantas ejecuciones: ")
+    execute_n_times(n)
+
+
+def execute_n_times(n):
+    show_settings()
+
+    print("\nEjecutando...\n")
+
+    for i in range(n):
+        Controller.execute()
+        Report.generations_report(Controller.get_execution_time())
+        print("Ejecución {}/{} Terminada".format(i + 1, n))
+
+
 def _border(printable_string):
     border = "#" * len(printable_string)
     string = border + "\n" + printable_string + "\n" + border + "\n"
@@ -100,7 +121,7 @@ def full_report():
 
     generations_report()
 
-    _border("La solucion final es: " + str(Controller.get_solution_report()))
+    _border("La solucion final es: " + str(Report.solution_report()))
 
     _border("Valor Cromosoma: " + str(Controller.get_decimal_value_report()))
 
@@ -110,32 +131,11 @@ def full_report():
 
 def generations_report():
     """Print the report of the generations"""
-    print("Generaciones: \n" + str(Controller.get_generation_report()))
+    print("Generaciones: \n" + str(Report.generations_report(Controller.get_execution_time())))
 
 
 def show_settings():
     print(Controller.show_settings())
-
-
-"""########"""
-"""Graphics"""
-"""########"""
-
-
-def graphic_min_max_mean():
-    maximums = pm.get_maximums()
-    averages = pm.get_averages()
-    minimums = pm.get_minimums()
-    graphics(datas=(maximums, averages, minimums),
-             labels=["Máximo", "Promedio", "Minimo"])
-
-
-def graphic_range():
-    graphics(datas=[pm.get_ranges()], labels=["Rangos"])
-
-
-def graphic_t():
-    graphics(datas=[pm.get_totals()], labels=["Totales"])
 
 
 """####"""
@@ -159,6 +159,12 @@ if __name__ == "__main__":
     from exercise1.logic.population_manager import PopulationController
     from exercise1.logic.controller import Controller
     from exercise1.util.graphic import graphics
+    from exercise1.util.report import Report
+    from exercise1.data.filemanager import FileManager
+
+    Report.FileManager = FileManager
+    Report.Controller = Controller
+    Report.Population = PopulationController
 
     pm = PopulationController
 

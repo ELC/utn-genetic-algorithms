@@ -33,14 +33,6 @@ class Controller():
         return pd.Series(Settings.load_all_settings())
 
     @staticmethod
-    def get_generation_report():
-        return Report.generations_report()
-
-    @staticmethod
-    def get_solution_report():
-        return Report.solution_report()
-
-    @staticmethod
     def get_execution_time():
         return Controller.total_time
 
@@ -55,7 +47,7 @@ if __name__ != '__main__':
 
     import timeit
 
-    from exercise1.logic.report import Report
+    from exercise1.util.report import Report
     from exercise1.logic.population_manager import PopulationController
     from exercise1.entities.population import Population
     from exercise1.logic.settings_manager import Settings
