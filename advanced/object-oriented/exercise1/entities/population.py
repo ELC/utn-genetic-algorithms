@@ -82,7 +82,7 @@ class Population():
             and add the resulting childs chromosomes"""
         couples = util.get_next_two(self.fathers)
 
-        cross_over_prob = Settings.cross_over_prob
+        cross_over_prob = Settings.get_cross_over_prob()
 
         precision = util.get_precision(cross_over_prob)
 
@@ -159,6 +159,6 @@ class Population():
 
 
 if __name__ != "__main__":
-    from exercise1.logic.settings_manager import Settings
+    from exercise1.data.filemanager import FileManager as Settings
     from exercise1.entities.chromosome import Chromosome
     import exercise1.util.util as util

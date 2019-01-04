@@ -24,13 +24,18 @@ class Chromosome():
 
     def get_target(self):
         gene_dec_value = util.bin_to_dec(self.genes)
-        return target_function(gene_dec_value)
+        return self.target_function(gene_dec_value)
 
     def get_fitness(self):
         return self.probability
 
+    @staticmethod
+    def target_function(number):
+        exp = Settings.get_chromosome_bits()
+        coef = (2 ** exp) - 1
+        return (number / coef) ** 2
+
 
 if __name__ != "__main__":
-    from exercise1.logic.settings_manager import Settings
-    from exercise1.logic.target import target as target_function
+    from exercise1.data.filemanager import FileManager as Settings
     import exercise1.util.util as util

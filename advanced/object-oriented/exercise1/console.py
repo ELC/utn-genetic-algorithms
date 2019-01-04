@@ -103,7 +103,7 @@ def execute_n_times(n):
 
     for i in range(n):
         Controller.execute()
-        Report.generations_report(Controller.get_execution_time())
+        Report.generations_report()
         print("Ejecución {}/{} Terminada".format(i + 1, n))
 
 
@@ -131,7 +131,7 @@ def full_report():
 
 def generations_report():
     """Print the report of the generations"""
-    print("Generaciones: \n" + str(Report.generations_report(Controller.get_execution_time())))
+    print("Generaciones: \n" + str(Report.generations_report()))
 
 
 def show_settings():

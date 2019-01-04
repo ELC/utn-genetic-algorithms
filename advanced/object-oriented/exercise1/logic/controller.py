@@ -30,7 +30,7 @@ class Controller():
 
     @staticmethod
     def show_settings():
-        return pd.Series(Settings.load_all_settings())
+        return pd.Series(Settings.load_settings())
 
     @staticmethod
     def get_execution_time():
@@ -50,6 +50,6 @@ if __name__ != '__main__':
     from exercise1.util.report import Report
     from exercise1.logic.population_manager import PopulationController
     from exercise1.entities.population import Population
-    from exercise1.logic.settings_manager import Settings
+    from exercise1.data.filemanager import FileManager as Settings
 
     import pandas as pd
