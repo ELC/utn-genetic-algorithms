@@ -3,7 +3,10 @@
 import pandas as pd
 import time
 from openpyxl import load_workbook
-from exercise1.util.graphic import graphics
+from procedural.util.graphic import graphics
+import procedural.population as Population
+import procedural.controller
+import procedural.filemanager as FileManager
 
 pd.set_option('display.max_rows', 1500)
 pd.set_option('display.max_columns', 700)
@@ -12,10 +15,6 @@ pd.set_option('precision', 12)
 
 
 class Report():
-    FileManager = None
-    Controller = None
-    Population = None
-
 
     @classmethod
     def generations_report(cls, execution_time):
@@ -40,7 +39,7 @@ class Report():
     @classmethod
     def write_csv(cls, df, execution_time):
         name = str(cls.FileManager.get_settings_id())[:5]
-        filename = name + '.csv'
+        filename = "procedural/results/" + name + '.csv'
         if cls.is_empty(filename):
             settings = cls.FileManager.load_settings()
             pd.DataFrame(list(settings.items())).to_csv(
@@ -74,7 +73,7 @@ class Report():
     @classmethod
     def write_excel(cls, df, execution_time):
         sheet_name = str(cls.FileManager.get_settings_id())[1:5]
-        filename = 'resultados.xlsx'
+        filename = 'procedural/results/resultados.xlsx'
         writer = pd.ExcelWriter(filename, engine='openpyxl')
 
         try:
@@ -118,7 +117,7 @@ class Report():
         averages = [cls.get_average(population) for population in data]
         ranges = [cls.get_range(population) for population in data]
         total = [cls.get_sum(population) for population in data]
-        chromosome = [cls.Population.get_fittest_chromosome(population) for population in data]
+        chromosome = [Population.get_fittest_chromosome(population) for population in data]
         stationary = cls._get_stationary(data)
         return (maximums, minimums, averages, ranges, total, chromosome, stationary)
 
@@ -141,18 +140,17 @@ class Report():
         _, _, _, _, total, *_ = cls._get_array_data(data)
         graphics(datas=[total], labels=["Totales"])
 
-    @classmethod
-    def get_maximum(cls, population):
-        return max(cls.Population.get_targets(population))
+    @staticmethod
+    def get_maximum(population):
+        return max(Population.get_targets(population))
 
-    @classmethod
-    def get_minimum(cls, population):
-        return min(cls.Population.get_targets(population))
+    @staticmethod
+    def get_minimum(population):
+        return min(Population.get_targets(population))
 
-    @classmethod
-    def get_sum(cls, population):
-        print(cls.Population.get_targets(population))
-        return sum(cls.Population.get_targets(population))
+    @staticmethod
+    def get_sum(population):
+        return sum(Population.get_targets(population))
 
     @classmethod
     def get_average(cls, population):
@@ -167,7 +165,7 @@ class Report():
         aux = ""
         stationary = []
         for generation, population in enumerate(data):
-            max_chromosome = cls.Population.get_fittest_chromosome(population)
+            max_chromosome = Population.get_fittest_chromosome(population)
             if max_chromosome != aux:
                 aux = max_chromosome
                 last_value = generation + 1

@@ -1,15 +1,14 @@
 """Console View"""
 
-
 def main():
     menus = {}
 
     menus["1. Principal"] = {
         "Ejecutar": execute,
-        "Ejecutar 10 veces": lambda: execute_n_times(10),
-        "Ejecutar 30 veces": lambda: execute_n_times(30),
-        "Ejecutar 50 veces": lambda: execute_n_times(50),
-        "Ejecutar 100 veces": lambda: execute_n_times(100),
+        "Ejecutar 10 veces": lambda : execute_n_times(10),
+        "Ejecutar 30 veces": lambda : execute_n_times(30),
+        "Ejecutar 50 veces": lambda : execute_n_times(50),
+        "Ejecutar 100 veces": lambda : execute_n_times(100),
         "Ejecutar n veces": execute_times_by_user,
     }
 
@@ -21,6 +20,7 @@ def main():
     menus["3. Grafico"] = {
         "Graficar Maximos, minimos y promedios": Report.graphic_min_max_mean,
         "Graficar Rango": Report.graphic_range,
+        "Graficar Totales": Report.graphic_t,
     }
 
     menus["4. Configuracion"] = {
@@ -87,14 +87,12 @@ def show_submenu(submenu):
 
 
 def execute():
-    Controller.execute()
-    full_report()
-
+    execution_time = Controller.execute()
+    full_report(execution_time)
 
 def execute_times_by_user():
-    n = input("Cuantas ejecuciones: ")
+    n = int(input("Cuantas ejecuciones: "))
     execute_n_times(n)
-
 
 def execute_n_times(n):
     show_settings()
@@ -102,8 +100,8 @@ def execute_n_times(n):
     print("\nEjecutando...\n")
 
     for i in range(n):
-        Controller.execute()
-        Report.generations_report()
+        execution_time = Controller.execute()
+        Controller.get_generation_report(execution_time)
         print("Ejecución {}/{} Terminada".format(i + 1, n))
 
 
@@ -113,25 +111,24 @@ def _border(printable_string):
     print(string)
 
 
-def full_report():
+def full_report(execution_time):
     """Print all the reports"""
     print("La configuración usada fue:")
 
     show_settings()
 
-    generations_report()
+    generations_report(execution_time)
 
-    _border("La solucion final es: " + str(Report.solution_report()))
+    _border("La solucion final es: " + str(Controller.get_solution_report()))
 
     _border("Valor Cromosoma: " + str(Controller.get_decimal_value_report()))
 
-    _border("Tiempo de ejecucion (s): " +
-            str(Controller.get_execution_time()))
+    _border("Tiempo de ejecucion (s): " + str(execution_time))
 
 
-def generations_report():
+def generations_report(execution_time):
     """Print the report of the generations"""
-    print("Generaciones: \n" + str(Report.generations_report()))
+    print("Generaciones: \n" + str(Controller.get_generation_report(execution_time)))
 
 
 def show_settings():
@@ -155,17 +152,10 @@ def clear_screen():
 if __name__ == "__main__":
     from os import system as system_call
     from platform import system as system_name
-
-    from exercise1.logic.population_manager import PopulationController
-    from exercise1.logic.controller import Controller
-    from exercise1.util.graphic import graphics
-    from exercise1.util.report import Report
-    from exercise1.data.filemanager import FileManager
+    import procedural.controller as Controller
+    from procedural.util.report import Report
+    import procedural.filemanager as FileManager
 
     Report.FileManager = FileManager
-    Report.Controller = Controller
-    Report.Population = PopulationController
-
-    pm = PopulationController
-
+    
     main()

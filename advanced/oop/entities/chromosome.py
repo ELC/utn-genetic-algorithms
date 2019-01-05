@@ -37,5 +37,5 @@ class Chromosome():
 
 
 if __name__ != "__main__":
-    from exercise1.data.filemanager import FileManager as Settings
-    import exercise1.util.util as util
+    from oop.data.filemanager import FileManager as Settings
+    import oop.util.util as util

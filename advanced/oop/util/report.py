@@ -1,12 +1,12 @@
 """Reports"""
 
-from exercise1.logic.population_manager import PopulationController
+from oop.logic.population_manager import PopulationController
 import pandas as pd
 import time
 from openpyxl import load_workbook
-from exercise1.data.filemanager import FileManager as Settings
-from exercise1.logic.controller import Controller
-from exercise1.util.graphic import graphics
+from oop.data.filemanager import FileManager as Settings
+from oop.logic.controller import Controller
+from oop.util.graphic import graphics
 
 pd.set_option('display.max_rows', 1500)
 pd.set_option('display.max_columns', 700)
@@ -43,7 +43,7 @@ class Report():
     @classmethod
     def write_csv(cls, df):
         name = str(Settings.get_settings_id())[:5]
-        filename = name + '.csv'
+        filename = "oop/results/" +name + '.csv'
         if cls.is_empty(filename):
             settings = Settings.load_settings()
             pd.DataFrame(list(settings.items())).to_csv(
@@ -77,7 +77,7 @@ class Report():
     @classmethod
     def write_excel(cls, df):
         sheet_name = str(Settings.get_settings_id())[1:5]
-        filename = 'resultados.xlsx'
+        filename = 'oop/results/resultados.xlsx'
         writer = pd.ExcelWriter(filename, engine='openpyxl')
 
         try:

@@ -47,9 +47,9 @@ if __name__ != '__main__':
 
     import timeit
 
-    from exercise1.util.report import Report
-    from exercise1.logic.population_manager import PopulationController
-    from exercise1.entities.population import Population
-    from exercise1.data.filemanager import FileManager as Settings
+    from oop.util.report import Report
+    from oop.logic.population_manager import PopulationController
+    from oop.entities.population import Population
+    from oop.data.filemanager import FileManager as Settings
 
     import pandas as pd

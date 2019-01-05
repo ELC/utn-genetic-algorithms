@@ -131,5 +131,5 @@ def target_function(number, chromosome_size):
 
 
 if __name__ != "__main__":
-    import exercise1.filemanager as FileManager
-    import exercise1.util.util as util
+    import procedural.filemanager as FileManager
+    import procedural.util.util as util

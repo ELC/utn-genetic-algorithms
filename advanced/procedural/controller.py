@@ -55,8 +55,8 @@ if __name__ != '__main__':
 
     import timeit
 
-    from exercise1.util.report import Report
-    import exercise1.population as Population
-    import exercise1.filemanager as FileManager
+    from procedural.util.report import Report
+    import procedural.population as Population
+    import procedural.filemanager as FileManager
 
     import pandas as pd

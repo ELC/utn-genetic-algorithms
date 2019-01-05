@@ -56,5 +56,5 @@ class PopulationController():
 
 
 if __name__ != '__main__':
-    from exercise1.data.filemanager import FileManager
-    from exercise1.entities.population import Population
+    from oop.data.filemanager import FileManager
+    from oop.entities.population import Population
