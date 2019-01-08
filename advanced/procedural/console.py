@@ -154,8 +154,5 @@ if __name__ == "__main__":
     from platform import system as system_name
     import procedural.controller as Controller
     from procedural.util.report import Report
-    import procedural.filemanager as FileManager
-
-    Report.FileManager = FileManager
     
     main()
